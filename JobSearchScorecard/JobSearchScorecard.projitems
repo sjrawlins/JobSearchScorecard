@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>{401BED98-FC32-45A4-AEE6-EFD3CFD24832}</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>JobScorecard</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Model\ScorecardDatabase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Model\Task.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Model\Activity.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Model\Steps.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)App\JobSearchScorecard.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)App\MainNavigationPage.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)Model\" />
+  </ItemGroup>
+</Project>
