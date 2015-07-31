@@ -1,0 +1,11 @@
+﻿<Properties StartupItem="Droid/JobScorecard.Droid.csproj">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Android.Nexus S (KitKat)" />
+  <MonoDevelop.Ide.Workbench />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <DisabledProjects>
+    <String>JobSearchScorecard/JobScorecard.shproj</String>
+  </DisabledProjects>
+</Properties>
