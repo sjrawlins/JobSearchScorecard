@@ -1,5 +1,5 @@
-﻿<Properties StartupItem="iOS/JobSearchScorecard.iOS.csproj">
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhone" PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneDeviceTarget.Steve Rawlins’s iPhone" />
+﻿<Properties StartupItem="Droid/JobSearchScorecard.Droid.csproj">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhoneSimulator" PreferredExecutionTarget="Android.Nexus 10 API19 (KitKat)" />
   <MonoDevelop.Ide.Workbench />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />

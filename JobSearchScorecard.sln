@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JobScorecard.iOS", "iOS\JobScorecard.iOS.csproj", "{C3CE6197-05FE-46AC-A9B1-9F7A626BA585}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JobScorecard.Droid", "Droid\JobScorecard.Droid.csproj", "{6B5E0A76-68E1-455F-90F5-FAEE1FC616A6}"
-EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "JobSearchScorecard", "JobSearchScorecard\JobSearchScorecard.shproj", "{401BED98-FC32-45A4-AEE6-EFD3CFD24832}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JobSearchScorecard.Droid", "Droid\JobSearchScorecard.Droid.csproj", "{6B5E0A76-68E1-455F-90F5-FAEE1FC616A6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
