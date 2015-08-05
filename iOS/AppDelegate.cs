@@ -5,6 +5,8 @@ using System.Linq;
 using Foundation;
 using UIKit;
 
+using JobSearchScorecard;
+
 using Xamarin.Forms;
 
 namespace JobScorecard.iOS
