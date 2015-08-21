@@ -101,12 +101,12 @@
     <Reference Include="System" />
     <Reference Include="System.Xml" />
     <Reference Include="Xamarin.iOS" />
-    <Reference Include="Calabash">
-      <HintPath>..\packages\Xamarin.TestCloud.Agent.0.14.1\lib\Xamarin.iOS10\Calabash.dll</HintPath>
-    </Reference>
     <Reference Include="Mono.Data.Sqlite" />
     <Reference Include="System.Data" />
     <Reference Include="System.Net" />
+    <Reference Include="Calabash">
+      <HintPath>..\packages\Xamarin.TestCloud.Agent.0.14.1\lib\Xamarin.iOS10\Calabash.dll</HintPath>
+    </Reference>
     <Reference Include="Xamarin.Forms.Platform.iOS">
       <HintPath>..\packages\Xamarin.Forms.1.4.4.6392\lib\Xamarin.iOS10\Xamarin.Forms.Platform.iOS.dll</HintPath>
     </Reference>
@@ -118,6 +118,9 @@
     </Reference>
     <Reference Include="Xamarin.Forms.Platform">
       <HintPath>..\packages\Xamarin.Forms.1.4.4.6392\lib\Xamarin.iOS10\Xamarin.Forms.Platform.dll</HintPath>
+    </Reference>
+    <Reference Include="SQLite">
+      <HintPath>..\packages\SQLite.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -136,6 +139,8 @@
     <BundleResource Include="Resources\Icon-Small-40.png" />
     <BundleResource Include="Resources\Icon-Small-40%402x.png" />
     <BundleResource Include="Resources\Icon-Small-40%403x.png" />
+    <BundleResource Include="Resources\stopsign.png" />
+    <BundleResource Include="Resources\newperiod.jpeg" />
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="Resources\LaunchScreen.storyboard" />
@@ -148,12 +153,18 @@
   <ItemGroup>
     <Compile Include="Main.cs" />
     <Compile Include="AppDelegate.cs" />
+    <Compile Include="SQLite_iOS.cs" />
   </ItemGroup>
   <ItemGroup>
     <ITunesArtwork Include="ITunesArtwork" />
     <ITunesArtwork Include="ITunesArtwork%402x" />
   </ItemGroup>
-  <Import Project="..\JobSearchScorecard\JobSearchScorecard.projitems" Label="Shared" Condition="Exists('..\JobSearchScorecard\JobSearchScorecard.projitems')" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <Import Project="..\packages\Xamarin.Forms.1.4.4.6392\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+MonoTouch10+Xamarin.iOS10\Xamarin.Forms.targets" Condition="Exists('..\packages\Xamarin.Forms.1.4.4.6392\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+MonoTouch10+Xamarin.iOS10\Xamarin.Forms.targets')" />
+  <ItemGroup>
+    <ProjectReference Include="..\JobSearchScorecard.PCL\JobSearchScorecard.PCL.csproj">
+      <Project>{849887DB-9FBE-4224-BBEC-F209B31996F4}</Project>
+      <Name>JobSearchScorecard.PCL</Name>
+    </ProjectReference>
+  </ItemGroup>
 </Project>
