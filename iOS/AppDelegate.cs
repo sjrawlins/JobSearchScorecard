@@ -8,8 +8,9 @@ using UIKit;
 using JobSearchScorecard;
 
 using Xamarin.Forms;
+using System.IO;
 
-namespace JobScorecard.iOS
+namespace JobSearchScorecard.iOS
 {
     [Register ("AppDelegate")]
     public partial class AppDelegate : global::Xamarin.Forms.Platform.iOS.FormsApplicationDelegate
