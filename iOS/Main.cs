@@ -5,7 +5,7 @@ using System.Linq;
 using Foundation;
 using UIKit;
 
-namespace JobScorecard.iOS
+namespace JobSearchScorecard.iOS
 {
     public class Application
     {
