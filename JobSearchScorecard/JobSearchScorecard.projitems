@@ -6,7 +6,7 @@
     <SharedGUID>{401BED98-FC32-45A4-AEE6-EFD3CFD24832}</SharedGUID>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">
-    <Import_RootNamespace>JobScorecard</Import_RootNamespace>
+    <Import_RootNamespace>JobSearchScorecard</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Model\ScorecardDatabase.cs" />
@@ -15,6 +15,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Model\Steps.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)App\JobSearchScorecard.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)App\MainNavigationPage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Model\DatabaseADO.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)App\TaskManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Model\" />

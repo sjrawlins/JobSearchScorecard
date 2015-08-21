@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using Xamarin.Forms;
 
+using JobSearchScorecard.Database;
+
 namespace JobSearchScorecard
 {
 	public class StartPage : ContentPage
@@ -13,6 +15,8 @@ namespace JobSearchScorecard
 		{
 			currentTasks = MockUpTasks ();
 			InitActivities ();
+
+			var startPeriod = TaskManager.GetStartDate ();
 
 			Padding = new Thickness (20);
 			var listView = new ListView {
@@ -39,13 +43,11 @@ namespace JobSearchScorecard
 				XAlign = TextAlignment.Center,
 			};
 
-			DateTime dateRangeFrom = new DateTime (2015, 6, 10);
-			DateTime dateRangeTo = DateTime.Now;
-			var dateRange = "period from: " + dateRangeFrom.ToString () + " to " + dateRangeTo.ToString ();
+			var dateRange = "for period starting: " + startPeriod.ToString (); //+ " to " + dateRangeTo.ToString ();
 			var dateRangeLabel = new Label () {
-				FontSize = 20,
+				FontSize = 14,
 				Text = dateRange,
-				XAlign = TextAlignment.Center,
+				XAlign = TextAlignment.Start,
 			};
 				
 			Content = new StackLayout {
