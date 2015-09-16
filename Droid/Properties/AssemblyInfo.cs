@@ -5,12 +5,12 @@ using Android.App;
 // Information about this assembly is defined by the following attributes.
 // Change them to the values specific to your project.
 
-[assembly: AssemblyTitle ("JobScorecard.Droid")]
+[assembly: AssemblyTitle ("JobSearchScorecard.Droid")]
 [assembly: AssemblyDescription ("")]
 [assembly: AssemblyConfiguration ("")]
-[assembly: AssemblyCompany ("")]
+[assembly: AssemblyCompany ("Steve Rawlins Software")]
 [assembly: AssemblyProduct ("")]
-[assembly: AssemblyCopyright ("ifactr")]
+[assembly: AssemblyCopyright ("Stephen J. Rawlins")]
 [assembly: AssemblyTrademark ("")]
 [assembly: AssemblyCulture ("")]
 
