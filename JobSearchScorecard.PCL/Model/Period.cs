@@ -4,8 +4,8 @@ using SQLite;
 namespace JobSearchScorecard
 {
 	// Period over which scores are summed.  When user chooses to start a new period, create a
-	// new row in this table.  There should always be one, and only one, row whose EndPeriod is 3000-12-31, 
-	// and that represents the current period.
+	// new row in this table.  There should always be one, and only one, row whose End is in the future,
+	// and that row represents the current period.
 	public class Period
 	{
 		[PrimaryKey, AutoIncrement]
@@ -18,15 +18,9 @@ namespace JobSearchScorecard
 		{
 			var startNow = DateTime.Now;
 			StartDT = startNow;
-			EndDT = startNow.AddYears (1);
+			EndDT = startNow.AddYears (1);  // because it needs some value, and 1-year out makes more sense to me than a "max" date
 			Score = 0;
 		}
-//		public Period (DateTime startPeriod, DateTime endPeriod)
-//		{
-//			StartDT = startPeriod;
-//			EndDT = endPeriod;
-//			Score = 0;
-//		}
 	}
 }
 

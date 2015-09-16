@@ -3,8 +3,10 @@ using System.Collections.Generic;
 
 namespace JobSearchScorecard
 {
-	// One of the sub-steps in the Job Search process, the Activity has a name and a score
+	// One of the sub-steps in the Job Search process, an Activity belongs to a Step, has a name and a score
 	// (and it might only be available once in a lifetime)
+	// This data, these Activities, are used for REFERENCE (i.e. Lookup - to get the score) and are not stored on the DB
+
 	public class Activity
 	{
 		public Steps Step;
@@ -59,7 +61,7 @@ namespace JobSearchScorecard
 				new Activity (Steps.All, "Read Scripture", 10),
 				new Activity (Steps.All, "Share daily plans with family", 4),
 			}
-			);
+			);   // subSteps 0 .. 2
 
 			// STEP 1 - ATTITUDE
 			Activities.Add (Steps.Attitude, new List<Activity> (16) {
@@ -73,7 +75,7 @@ namespace JobSearchScorecard
 				new Activity (Steps.Attitude, "Join a Toastmasters Club", 10, true),
 				new Activity (Steps.Attitude, "Gain new Job Skills", 15),
 			}
-			);
+			);  // subSteps 3 .. 11   (10 is the TM task)
 
 			// Step 2 - ASSESSMENTS
 			Activities.Add (Steps.Assessments, new List<Activity> (16) {
@@ -103,7 +105,7 @@ namespace JobSearchScorecard
 				new Activity (Steps.MarketingStrategy, "Hold face-to-face network meetings", 20),
 				new Activity (Steps.MarketingStrategy, "Practice \"elevator speech\"", 2),
 				new Activity (Steps.MarketingStrategy, "Review JTSG Yahoo postings every day", 5),
-				new Activity (Steps.MarketingStrategy, "Visit library to research target company", 10),
+				new Activity (Steps.MarketingStrategy, "Visit J.J. Hill library to research target company", 10),
 			}
 			);
 
@@ -129,20 +131,20 @@ namespace JobSearchScorecard
 				new Activity (Steps.Interviewing, "Document responses to \"64 Toughest Questions\" using STAR stories",	30),
 				new Activity (Steps.Interviewing, "Getting Interviews - Document Strategy",	10),
 				new Activity (Steps.Interviewing, "Getting Interviews - List target employers",	8),
-				new Activity (Steps.Interviewing, "Preparing for the Interview - List 5 questions you would ask if you were the interviewer",	10),
-				new Activity (Steps.Interviewing, "Preparing for the Interview - Read Interviewing Documents",	8),
-				new Activity (Steps.Interviewing, "Preparing for the Interview - Develop Written Interview strategy",	10),
-				new Activity (Steps.Interviewing, "Preparing for the Interview - Define clearly what you want the interviewer to know about you", 10),
-				new Activity (Steps.Interviewing, "Preparing for the Interview - Develop answers to \"Behavioral Interview\" questions using STAR", 20),
-				new Activity (Steps.Interviewing, "Preparing for the Interview - Research prospective employers", 10),
-				new Activity (Steps.Interviewing, "Preparing for the Interview - Research prospective industries",	10),
-				new Activity (Steps.Interviewing, "Preparing for the Interview - Research hiring manager",	10),
-				new Activity (Steps.Interviewing, "Preparing for the Interview - Complete Interview Preparation Checklist",	15),
-				new Activity (Steps.Interviewing, "Preparing for the Interview - Develop written 2nd interview strategy",	10),
-				new Activity (Steps.Interviewing, "Preparing for the Interview - Practice the \"64 Toughest\" questions and answers",	10),
-				new Activity (Steps.Interviewing, "Interviewing - Review Interviewing Basics with a yellow tag", 15),
-				new Activity (Steps.Interviewing, "Interviewing - Review Interviewing strategy with a yellow tag", 15),
-				new Activity (Steps.Interviewing, "Interviewing - Ask \"Rocking chair question\"", 15),
+				new Activity (Steps.Interviewing, "List 5 questions you would ask if you were the interviewer",	10),
+				new Activity (Steps.Interviewing, "Read Interviewing Documents",	8),
+				new Activity (Steps.Interviewing, "Develop Written Interview strategy",	10),
+				new Activity (Steps.Interviewing, "Define clearly what you want the interviewer to know about you", 10),
+				new Activity (Steps.Interviewing, "Develop answers to \"Behavioral Interview\" questions using STAR", 20),
+				new Activity (Steps.Interviewing, "Research prospective employers", 10),
+				new Activity (Steps.Interviewing, "Research prospective industries",	10),
+				new Activity (Steps.Interviewing, "Research hiring manager",	10),
+				new Activity (Steps.Interviewing, "Complete Interview Preparation Checklist",	15),
+				new Activity (Steps.Interviewing, "Develop written 2nd interview strategy",	10),
+				new Activity (Steps.Interviewing, "Practice the \"64 Toughest\" questions and answers",	10),
+				new Activity (Steps.Interviewing, "Review Interviewing Basics with a yellow tag", 15),
+				new Activity (Steps.Interviewing, "Review Interviewing strategy with a yellow tag", 15),
+				new Activity (Steps.Interviewing, "Ask \"Rocking chair question\"", 15),
 			}
 			);
 

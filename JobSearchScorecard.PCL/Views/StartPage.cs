@@ -14,15 +14,16 @@ namespace JobSearchScorecard
 		public StartPage ()
 		{
 			Title = "Job Search Scorecard";
+			ActivityTable.BuildActivitiesDictionary ();  // build the pre-determined table of potential tasks (or Activity list) 
 			currentTasks = MockUpTasks ();  // for now, mock-up some tasks completed
-			ActivityTable.BuildActivitiesDictionary ();
 			Debug.WriteLine ("Built Activities Dictionary with : " + Activity.UniqueCode + " unique entries");
+			Debug.WriteLine ("Database starts with " + App.Database.GetTasks ().Count () + " rows in <Task>");
 
 
 			// Define command for the items in the TableView.
 			Command<Steps> navigateCommand = 
 				new Command<Steps> (async (Steps step) => {
-					System.Diagnostics.Debug.WriteLine ("navigate delegate, pageType=" + step);
+					Debug.WriteLine ("navigate to StepPage for step:" + step);
 					Page page = new StepPage (step);
 					await this.Navigation.PushAsync (page);
 				});
@@ -31,7 +32,8 @@ namespace JobSearchScorecard
 			foreach (var s in StepNames.stepList) {
 				stepsSection.Add (new TextCell 
 					{ Text = s, Command = navigateCommand, CommandParameter = StepNames.LookUpStepCodeGivenName (s), });
-			};
+			}
+			;
 
 			// Give current score a color coding
 			int score = CalculateScore (currentTasks);
@@ -40,7 +42,8 @@ namespace JobSearchScorecard
 			if (score < 50) {
 				scoreColor = Color.Red;
 				detailLine = "Uh, oh.  Need to pick it up!";
-			};
+			}
+			;
 
 			var scoreSection = new TableSection ("Score for period beginning " + App.Database.GetActivePeriod ().StartDT);
 			scoreSection.Add (new TextCell () {
@@ -51,6 +54,7 @@ namespace JobSearchScorecard
 			});
 
 
+			// At bottom, two buttons: one for starting a new period, the other for wiping-out the database
 			var btnNewPeriod = new Button {
 				Text = "Start New Period",
 				VerticalOptions = LayoutOptions.CenterAndExpand,
@@ -59,7 +63,8 @@ namespace JobSearchScorecard
 			};
 			btnNewPeriod.Clicked += async(sender, e) => {
 				var action = await DisplayActionSheet ("Start a new period?", "No! Cancel", "YES!");
-				if (action.StartsWith("N")) return;
+				if (action.StartsWith ("N"))
+					return;
 				if (App.Database.SavePeriod () != 1) {
 					throw new Exception ("Cannot create new Period!");
 				}
@@ -73,9 +78,10 @@ namespace JobSearchScorecard
 			};
 			btnClearDB.Clicked += async (sender, e) => {
 				var action = await DisplayActionSheet ("Are you sure you want to delete all data?", 
-					"No! Cancel", "YES! Blow it away!");
-				if (action.StartsWith("N")) return;
-				App.Database.DeleteAll();
+					             "No! Cancel", "YES! Blow it away!");
+				if (action.StartsWith ("N"))
+					return;
+				App.Database.DeleteAll ();
 			};
 
 			var layout = new StackLayout () { Orientation = StackOrientation.Horizontal, };
@@ -96,9 +102,9 @@ namespace JobSearchScorecard
 			table.Root = new TableRoot () {
 				stepsSection,
 				scoreSection,
-				new TableSection("Resets") {
-					new ViewCell() { View = layout },
-					new ViewCell() { View = layout2 },
+				new TableSection ("Resets") {
+					new ViewCell () { View = layout },
+					new ViewCell () { View = layout2 },
 				}
 			};
 			Content = table;
@@ -106,17 +112,31 @@ namespace JobSearchScorecard
 
 		public List<Task> MockUpTasks ()
 		{
+			var tmTask = new Task ();
+			tmTask.Step = 1;
+			tmTask.SubStep = 10;
+			tmTask.OneTimeOnly = 1;
+			tmTask.DT = new DateTime (2013, 7, 8, 12, 30, 00);
+			tmTask.Notes = "join TM!";
 			// just for testing.  No database action, just create fake Tasks out of thin air
 			// the first argument to Task, the DatabaseID, means nothing here
 			var fakeList = new List<Task> () {
 				new Task (1000, (int)Steps.All, 0, 0, DateTime.Now, "pray!"),
-				new Task (1008, (int)Steps.Attitude, 3, 1, DateTime.Now.AddHours(-3), "Read and list 3 items"),
+				new Task (1008, (int)Steps.Attitude, 3, 1, DateTime.Now.AddHours (-3), "Read and list 3 items"),
 				new Task (1001, (int)Steps.Attitude, 4, 0, DateTime.Now.AddMinutes (-5), "list negatives"),
 				new Task (1002, (int)Steps.Attitude, 11, 0, DateTime.Now.AddDays (-2), "new skills"),
+				tmTask,
 				new Task (1003, (int)Steps.Assessments, 12, 0, DateTime.Now.AddDays (-2), "read docs"),
 				new Task (1004, (int)Steps.MarketingStrategy, 27, 0, DateTime.Now.AddDays (-2), "netw handout"),
 				new Task (1005, (int)Steps.MarketingStrategy, 30, 0, DateTime.Now.AddDays (-2), "face2face"),
 			};
+			if (!App.Database.GetTaskByUniqueStepNum (tmTask.SubStep).Any ()) {
+				var rc = App.Database.SaveTask (tmTask);
+				if (rc != 1) {
+					throw new Exception ("SaveTask failed to insert test task");
+				}
+			}
+			;
 			return fakeList;
 		}
 
@@ -141,7 +161,8 @@ namespace JobSearchScorecard
 				if (!foundIt) {
 					throw new Exception ("Cannot calculate score for Step" + step + " substep: " + t.SubStep);
 				}
-			};
+			}
+			;
 			return tempScore;		
 		}
 

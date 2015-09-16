@@ -3,9 +3,9 @@ using Xamarin.Forms;
 
 namespace JobSearchScorecard
 {
-	public class StepCell : ViewCell
+	public class TaskCell : ViewCell
 	{
-		public StepCell (Activity act)
+		public TaskCell (Activity act)
 		{
 			var label = new Label {
 				Text = act.FullName,

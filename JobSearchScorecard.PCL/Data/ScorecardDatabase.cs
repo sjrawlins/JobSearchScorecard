@@ -50,6 +50,16 @@ namespace JobSearchScorecard
 			}
 		}
 
+		public IEnumerable<Task> GetTaskByUniqueStepNum (int subStepNum)
+		{
+			if (subStepNum < 0 || subStepNum >= Activity.UniqueCode) {
+				throw new IndexOutOfRangeException ("Impossible subStepNum=" + subStepNum);
+			}
+			lock (locker) {
+				return database.Table<Task> ().Where (t => t.SubStep == subStepNum);
+			}
+		}
+
 		public IEnumerable<Task> GetTasksWithinPeriod ()
 		{
 			lock (locker) {
