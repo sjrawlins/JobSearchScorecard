@@ -7,7 +7,7 @@ using Android.OS;
 namespace SplashScreen
 {
 
-	[Activity (MainLauncher = true, NoHistory = true)]
+	[Activity (Theme = "@style/Theme.Splash", MainLauncher = true, NoHistory = true)]
 	public class SplashActivity : Android.App.Activity
 	{
 		protected override void OnCreate (Bundle bundle)

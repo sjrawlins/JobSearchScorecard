@@ -12,7 +12,7 @@ using JobSearchScorecard;
 
 namespace JobSearchScorecard.Droid
 {
-	[Activity (Label = "JobSearchScorecard.Droid", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
+	[Activity (Label = "JobSearchScorecard.Droid", ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
 	public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsApplicationActivity
 	{
 		protected override void OnCreate (Bundle bundle)
