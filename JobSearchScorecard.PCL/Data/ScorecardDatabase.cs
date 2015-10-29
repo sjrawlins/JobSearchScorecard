@@ -26,7 +26,12 @@ namespace JobSearchScorecard
 				database.Insert (newPeriod);
 			}
 		}
-
+		public IEnumerable<Period> GetPeriods ()
+		{
+			lock (locker) {
+				return (from i in database.Table<Period>() select i).ToList();
+			}
+		}
 		public Period GetActivePeriod()
 		{
 			IEnumerable<Period> periodRows;
@@ -34,7 +39,7 @@ namespace JobSearchScorecard
 			lock (locker) {
 				periodRows = database.Query<Period> ("select * from [Period] where [EndDt] > ?", DateTime.Now);
 				if (periodRows == null) {
-					throw new Exception ("Current period not found in database");
+					throw new Exception ("In GetActivePeriod: Current period not found in database");
 				}
 				return periodRows.First ();
 				// For some reason the following did not work for me (never got to the bottom of it & decided to
@@ -60,13 +65,30 @@ namespace JobSearchScorecard
 			}
 		}
 
-		public IEnumerable<Task> GetTasksWithinPeriod ()
+		public IEnumerable<Task> GetSpecificTasksWithinPeriodForSpecific (int subStepNum)
 		{
 			lock (locker) {
-				return database.Query<Task> ("SELECT * FROM [Task]");  //  WHERE [DT]");  
-				// need sub-query for active period to know   WHERE [DT] BETWEEN start_date and max_date
+				var currentPeriod = database.Query<Period> ("select * from [Period] where [EndDt] > ?", DateTime.Now);
+				if (currentPeriod == null) {
+					throw new Exception ("In GetTasksWithinPeriod: Current period not found in database");
+				}
+				var periodStartDate = currentPeriod.First ().StartDT;
+				return database.Query<Task> ("SELECT * FROM [Task] WHERE [SubStep] = ? AND [DT] > ?", subStepNum, periodStartDate);
 			}
 		}
+
+		public IEnumerable<Task> GetAllTasksWithinPeriod ()
+		{
+			lock (locker) {
+				var currentPeriod = database.Query<Period> ("select * from [Period] where [EndDt] > ?", DateTime.Now);
+				if (currentPeriod == null) {
+					throw new Exception ("In GetTasksWithinPeriod: Current period not found in database");
+				}
+				var periodStartDate = currentPeriod.First ().StartDT;
+				return database.Query<Task> ("SELECT * FROM [Task] WHERE [DT] > ?", periodStartDate);
+			}
+		}
+
 
 		public Task GetTask (int id) 
 		{

@@ -9,13 +9,11 @@ namespace JobSearchScorecard
 	public class App : Application
 	{
 		static ScorecardDatabase database;
-		public Page appStartPage;
 		public static INavigation Navigation { get; private set; }
 
 		public App ()
 		{
-		    appStartPage = new StartPage ();
-			MainPage = new NavigationPage(appStartPage);
+			MainPage = new NavigationPage(new StartPage ());
 		}
 
 		public static ScorecardDatabase Database {
@@ -27,13 +25,13 @@ namespace JobSearchScorecard
 			}
 		}
 
-		public static Page GetMainPage ()
-		{
-			//return new StartPage ();
-			var rootPage = new NavigationPage (new StartPage ());
-			Navigation = rootPage.Navigation;
-			return rootPage;
-		}
+//		public static Page GetMainPage ()
+//		{
+//			//return new StartPage ();
+//			var rootPage = new NavigationPage (new StartPage ());
+//			Navigation = rootPage.Navigation;
+//			return rootPage;
+//		}
 
 		protected override void OnStart ()
 		{

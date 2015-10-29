@@ -32,8 +32,11 @@ namespace JobSearchScorecard
 					
 			var activityList = ActivityTable.Activities [step];
 			foreach (var act in activityList) {
+				var points = "(" + act.Score.ToString () + " points)";
 				ts.Add (new TextCell {
 					Text = act.FullName,
+					Detail = points,
+					DetailColor = Color.Accent,
 					Command = navigateCommand, CommandParameter = act, 
 				});
 			}

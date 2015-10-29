@@ -9,6 +9,7 @@ namespace JobSearchScorecard
 		public int ID { get; set; }  // unique row ID from Database, thus a DB/SQL concept only and not part of the app model
 		public int Step { get; set; } // Step 0 = ALL, etc.
 		public int SubStep { get; set; } // code which also uniquely identifies the activity, even across Steps
+		public int Score { get; set; } // the score for completing this task
 		public int OneTimeOnly { get; set; } // >0 means this is a once-in-a-lifetime task
 		public DateTime DT { get; set; }  // records the Date AND Time task was accomplished (which falls into a unique Period)
 		public string Notes { get; set; } // TBD not sure if I'll use this, but thinking of place for users to stash notes
@@ -17,11 +18,21 @@ namespace JobSearchScorecard
 		{
 		}
 
-		public Task (int dbID, int step, int subStep, int oneTime, DateTime dtStamp, string notes)
+		public Task (int dbID, int step, int subStep, int score, int oneTime, DateTime dtStamp, string notes)
 		{
 			ID = dbID;
 			Step = step;
 			SubStep = subStep;
+			Score = score;
+			OneTimeOnly = oneTime;
+			DT = dtStamp;
+			Notes = notes;
+		}
+		public Task (int step, int subStep, int score, int oneTime, DateTime dtStamp, string notes)
+		{
+			Step = step;
+			SubStep = subStep;
+			Score = score;
 			OneTimeOnly = oneTime;
 			DT = dtStamp;
 			Notes = notes;

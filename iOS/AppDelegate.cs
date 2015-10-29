@@ -15,7 +15,7 @@ namespace JobSearchScorecard.iOS
     [Register ("AppDelegate")]
     public partial class AppDelegate : global::Xamarin.Forms.Platform.iOS.FormsApplicationDelegate
     {
-        UIWindow window;
+        //UIWindow window;
 
         public override bool FinishedLaunching (UIApplication app, NSDictionary options)
         {
@@ -24,14 +24,17 @@ namespace JobSearchScorecard.iOS
 			// Also Init the Xamarin Test Cloud to enable UI Test Automation
 			Xamarin.Calabash.Start();
 
-            window = new UIWindow(UIScreen.MainScreen.Bounds);
+			LoadApplication (new App ());
+			return base.FinishedLaunching (app, options);
+//
+//            window = new UIWindow(UIScreen.MainScreen.Bounds);
+//
+//            window.RootViewController =  App.GetMainPage().CreateViewController();
+//
+//            window.MakeKeyAndVisible();
+//
+//            return true;
 
-            window.RootViewController =  App.GetMainPage().CreateViewController();
-
-            window.MakeKeyAndVisible();
-
-            return true;
-            // return base.FinishedLaunching (app, options);
         }
     }
 }

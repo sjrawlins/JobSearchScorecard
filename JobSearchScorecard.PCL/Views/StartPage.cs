@@ -9,15 +9,35 @@ namespace JobSearchScorecard
 	public class StartPage : ContentPage
 	{
 
+		private int _totalScore;
+		public int TotalScore
+		{
+			get
+			{
+				//CalculateScore (tasksAccomplished);
+				return this._totalScore;
+			}
+			set
+			{
+				this._totalScore = value;
+			}
+		}
+
+		private static bool firstTime = true;
 		public List<Task> currentTasks;
 
 		public StartPage ()
 		{
 			Title = "Job Search Scorecard";
-			ActivityTable.BuildActivitiesDictionary ();  // build the pre-determined table of potential tasks (or Activity list) 
-			currentTasks = MockUpTasks ();  // for now, mock-up some tasks completed
-			Debug.WriteLine ("Built Activities Dictionary with : " + Activity.UniqueCode + " unique entries");
-			Debug.WriteLine ("Database starts with " + App.Database.GetTasks ().Count () + " rows in <Task>");
+			if (firstTime) {
+				firstTime = false;
+				_totalScore = 0;
+				ActivityTable.BuildActivitiesDictionary ();  // build the pre-determined table of potential tasks (or Activity list) 
+				//currentTasks = MockUpTasks ();  // for now, mock-up some tasks completed
+				Debug.WriteLine ("Built Activities Dictionary with : " + Activity.UniqueCode + " unique entries");
+			}
+			Debug.WriteLine ("Database now has " + App.Database.GetTasks ().Count () + " rows in <Task>");
+			Debug.WriteLine ("Database now has " + App.Database.GetPeriods ().Count () + " rows in <Period>");
 
 
 			// Define command for the items in the TableView.
@@ -36,7 +56,7 @@ namespace JobSearchScorecard
 			;
 
 			// Give current score a color coding
-			int score = CalculateScore (currentTasks);
+			int score = CalculateScore (App.Database.GetAllTasksWithinPeriod());
 			string detailLine = "You're doing well, keep at it!";
 			Color scoreColor = Color.Green;
 			if (score < 50) {
@@ -48,6 +68,8 @@ namespace JobSearchScorecard
 			var scoreSection = new TableSection ("Score for period beginning " + App.Database.GetActivePeriod ().StartDT);
 			scoreSection.Add (new TextCell () {
 				Text = score.ToString (),
+				// DataBinding examples in XAML, not code, so...
+				//BindingContext = new Binding(
 				TextColor = scoreColor,
 				DetailColor = scoreColor,
 				Detail = detailLine, 
@@ -110,25 +132,27 @@ namespace JobSearchScorecard
 			Content = table;
 		}
 
+		// just fake-up some tasks in order to get a score
 		public List<Task> MockUpTasks ()
 		{
 			var tmTask = new Task ();
 			tmTask.Step = 1;
 			tmTask.SubStep = 10;
+			tmTask.Step = 10;
 			tmTask.OneTimeOnly = 1;
 			tmTask.DT = new DateTime (2013, 7, 8, 12, 30, 00);
 			tmTask.Notes = "join TM!";
 			// just for testing.  No database action, just create fake Tasks out of thin air
 			// the first argument to Task, the DatabaseID, means nothing here
 			var fakeList = new List<Task> () {
-				new Task (1000, (int)Steps.All, 0, 0, DateTime.Now, "pray!"),
-				new Task (1008, (int)Steps.Attitude, 3, 1, DateTime.Now.AddHours (-3), "Read and list 3 items"),
-				new Task (1001, (int)Steps.Attitude, 4, 0, DateTime.Now.AddMinutes (-5), "list negatives"),
-				new Task (1002, (int)Steps.Attitude, 11, 0, DateTime.Now.AddDays (-2), "new skills"),
+				new Task (1000, (int)Steps.All, 0, 10, 0, DateTime.Now, "pray!"),
+				new Task (1008, (int)Steps.Attitude, 3, 5, 1, DateTime.Now.AddHours (-3), "Read and list 3 items"),
+				new Task (1001, (int)Steps.Attitude, 4, 8, 0, DateTime.Now.AddMinutes (-5), "list negatives"),
+				new Task (1002, (int)Steps.Attitude, 11, 15, 0, DateTime.Now.AddDays (-2), "new skills"),
 				tmTask,
-				new Task (1003, (int)Steps.Assessments, 12, 0, DateTime.Now.AddDays (-2), "read docs"),
-				new Task (1004, (int)Steps.MarketingStrategy, 27, 0, DateTime.Now.AddDays (-2), "netw handout"),
-				new Task (1005, (int)Steps.MarketingStrategy, 30, 0, DateTime.Now.AddDays (-2), "face2face"),
+				new Task (1003, (int)Steps.Assessments, 12, 8, 0, DateTime.Now.AddDays (-2), "read docs"),
+				new Task (1004, (int)Steps.MarketingStrategy, 27, 10, 0, DateTime.Now.AddDays (-2), "netw handout"),
+				new Task (1005, (int)Steps.MarketingStrategy, 30, 20, 0, DateTime.Now.AddDays (-2), "face2face"),
 			};
 			if (!App.Database.GetTaskByUniqueStepNum (tmTask.SubStep).Any ()) {
 				var rc = App.Database.SaveTask (tmTask);
@@ -140,7 +164,7 @@ namespace JobSearchScorecard
 			return fakeList;
 		}
 
-		public int CalculateScore (List<Task> tasksAccomplished)
+		public int CalculateScore (IEnumerable<Task> tasksAccomplished)
 		{
 			int tempScore = 0;
 			bool foundIt = false;
