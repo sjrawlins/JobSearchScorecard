@@ -8,7 +8,7 @@ namespace JobSearchScorecard
 {
 	public class App : Application
 	{
-		static ScorecardDatabase database;
+		static ScorecardDatabase database = null;
 		public static INavigation Navigation { get; private set; }
 
 		public App ()

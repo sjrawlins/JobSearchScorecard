@@ -1,0 +1,15 @@
+# Compiled
+*.dll
+*.exe
+*.o
+*.so
+*.userprefs
+*.suo
+Droid/bin
+Droid/obj
+Droid/Resources/Resource.designer.cs
+iOS/bin
+iOS/obj
+JobSearchScorecard.PCL/bin/
+JobSearchScorecard.PCL/obj/
+sqlite-net*

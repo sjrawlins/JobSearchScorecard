@@ -1,24 +1,26 @@
 ﻿using System;
+using System.Diagnostics;
 using Xamarin.Forms;
 
 namespace JobSearchScorecard
 {
 	public class TaskCell : ViewCell
 	{
-		public TaskCell (Activity act)
+		public DateTime TaskDate;
+		public TaskCell ()
 		{
-			var label = new Label {
-				Text = act.FullName,
-				YAlign = TextAlignment.Center
-
+			var taskDate = new Label {
+				Text = TaskDate.ToString ("f"),
+				YAlign = TextAlignment.Center,
 			};
-			//label.SetBinding (Label.TextProperty, "Name");
 
 			var layout = new StackLayout {
 				Padding = new Thickness(20, 0, 0, 0),
 				Orientation = StackOrientation.Horizontal,
 				HorizontalOptions = LayoutOptions.StartAndExpand,
-				Children = {label,}
+				Children = {
+					taskDate,
+				}
 			};
 			View = layout;
 		}

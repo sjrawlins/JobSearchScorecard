@@ -8,21 +8,6 @@ namespace JobSearchScorecard
 {
 	public class StartPage : ContentPage
 	{
-
-		private int _totalScore;
-		public int TotalScore
-		{
-			get
-			{
-				//CalculateScore (tasksAccomplished);
-				return this._totalScore;
-			}
-			set
-			{
-				this._totalScore = value;
-			}
-		}
-
 		private static bool firstTime = true;
 		public List<Task> currentTasks;
 
@@ -31,7 +16,6 @@ namespace JobSearchScorecard
 			Title = "Job Search Scorecard";
 			if (firstTime) {
 				firstTime = false;
-				_totalScore = 0;
 				ActivityTable.BuildActivitiesDictionary ();  // build the pre-determined table of potential tasks (or Activity list) 
 				//currentTasks = MockUpTasks ();  // for now, mock-up some tasks completed
 				Debug.WriteLine ("Built Activities Dictionary with : " + Activity.UniqueCode + " unique entries");
@@ -62,8 +46,7 @@ namespace JobSearchScorecard
 			if (score < 50) {
 				scoreColor = Color.Red;
 				detailLine = "Uh, oh.  Need to pick it up!";
-			}
-			;
+			};
 
 			var scoreSection = new TableSection ("Score for period beginning " + App.Database.GetActivePeriod ().StartDT);
 			scoreSection.Add (new TextCell () {

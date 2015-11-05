@@ -112,6 +112,7 @@ namespace JobSearchScorecard
 		public int DeleteTask(int id)
 		{
 			lock (locker) {
+				Debug.WriteLine ("About to delete task with ID=" + id);
 				return database.Delete<Task>(id);
 			}
 		}
