@@ -82,10 +82,16 @@ namespace JobSearchScorecard
 			lock (locker) {
 				var currentPeriod = database.Query<Period> ("select * from [Period] where [EndDt] > ?", DateTime.Now);
 				if (currentPeriod == null) {
-					throw new Exception ("In GetTasksWithinPeriod: Current period not found in database");
+					throw new Exception ("In GetTasksWithinPeriod: SELECT currentPeriod returned null List");
 				}
-				var periodStartDate = currentPeriod.First ().StartDT;
-				return database.Query<Task> ("SELECT * FROM [Task] WHERE [DT] > ?", periodStartDate);
+				if (currentPeriod.Any ()) {
+					// There should really only be one such row at this point, but a List needs a First...
+					var periodStartDate = currentPeriod.First ().StartDT;
+					return database.Query<Task> ("SELECT * FROM [Task] WHERE [DT] > ?", periodStartDate);
+				} else {
+					// the app does not function without a Current Period
+					throw new Exception ("In GetTasksWithinPeriod: No Current Period");
+				}
 			}
 		}
 
@@ -130,6 +136,9 @@ namespace JobSearchScorecard
 			lock (locker) {
 				database.DeleteAll<Task> ();
 				database.DeleteAll<Period> ();
+				// but there MUST always be a current period, so create it in the otherwise empty DB
+				var newPeriod = new Period ();
+				database.Insert (newPeriod);
 			}
 		}
 			

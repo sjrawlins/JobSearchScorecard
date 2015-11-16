@@ -42,7 +42,8 @@
     <Compile Include="Views\StartPage.cs" />
     <Compile Include="Views\TaskCell.cs" />
     <Compile Include="Views\ActivityPage.cs" />
-    <Compile Include="Views\AddTaskPage.cs" />
+    <Compile Include="Views\TaskDetailPage.cs" />
+    <Compile Include="Views\MainStepsPage.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <Import Project="..\packages\Xamarin.Forms.1.5.1.6471\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+MonoTouch10+Xamarin.iOS10\Xamarin.Forms.targets" Condition="Exists('..\packages\Xamarin.Forms.1.5.1.6471\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+MonoTouch10+Xamarin.iOS10\Xamarin.Forms.targets')" />

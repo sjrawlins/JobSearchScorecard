@@ -10,9 +10,12 @@ namespace JobSearchScorecard
 {
 	public class ActivityPage : ContentPage
 	{
+		ListView listView;
+		int subStep;
 
 		public ActivityPage (Activity act)
 		{
+			subStep = act.SubStep;
 			Title = act.FullName + " (worth " + act.Score.ToString () + " points)";
 
 //			Label header = new Label {
@@ -64,8 +67,8 @@ namespace JobSearchScorecard
 //				theView.Content = stack;
 //			} else {  
 			// Allow multiple task-completions here, so must use a scrolling ListView
-			var listView = new ListView ();
-			listView.ItemsSource = App.Database.GetAllTasksWithinPeriod ().Where (t => t.SubStep == act.SubStep);
+			listView = new ListView ();
+			//listView.ItemsSource = App.Database.GetAllTasksWithinPeriod ().Where (t => t.SubStep == act.SubStep);
 			listView.ItemTemplate = new DataTemplate (() => {
 				var cell = new TextCell ();
 				cell.SetBinding<Task> (TextCell.TextProperty, t => t.DT);
@@ -87,8 +90,7 @@ namespace JobSearchScorecard
 			#region toolbar
 			ToolbarItem tbi = null;
 			tbi = new ToolbarItem ("+", null, () => {
-				var newTask = new Task((int) act.Step, act.SubStep, act.Score, (act.OneTimeOnly ? 1 : 0), DateTime.Now, "placeholder");
-				//new Task (1008, (int)Steps.Attitude, 3, 5, 1, DateTime.Now.AddHours (-3), "Read and list 3 items")
+				var newTask = new Task((int) act.Step, act.SubStep, act.Score, (act.OneTimeOnly ? 1 : 0), DateTime.Now, string.Empty);
 				var taskDetailPage = new TaskDetailPage (newTask);
 				taskDetailPage.BindingContext = newTask;
 				Navigation.PushAsync (taskDetailPage);
@@ -99,6 +101,13 @@ namespace JobSearchScorecard
 
 		}
 
+		protected override void OnAppearing ()
+		{
+			base.OnAppearing ();
+			// reset the 'resume' id, since we just want to re-start here
+			//((App)App.Current).ResumeAtTodoId = -1;
+			listView.ItemsSource =  App.Database.GetAllTasksWithinPeriod ().Where (t => t.SubStep == subStep);
+		}
 	}
 }
 
