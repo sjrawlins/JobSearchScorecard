@@ -41,7 +41,7 @@ namespace JobSearchScorecard
 
 			var buttonStyle = new Style (typeof(Button)) {
 				Setters = {
-					//new Setter { Property = Butto
+					new Setter { Property = Button.TextColorProperty, Value = Color.White, },
 					new Setter { Property = Button.BackgroundColorProperty, Value = Color.Teal, },
 					new Setter { Property = Button.BorderRadiusProperty, Value = 5 },
 					new Setter { Property = Button.HeightRequestProperty, Value = 50 }
@@ -61,8 +61,6 @@ namespace JobSearchScorecard
 			var btnNewPeriod = new Button {
 				Text = "Start New Period",
 				Style = buttonStyle,
-				//VerticalOptions = LayoutOptions.CenterAndExpand,
-				//HorizontalOptions = LayoutOptions.StartAndExpand,
 			};
 			btnNewPeriod.Clicked += async(sender, e) => {
 				var action = await DisplayActionSheet ("Start a new period?", "No! Cancel", "YES!");
