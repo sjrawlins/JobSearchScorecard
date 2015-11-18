@@ -8,7 +8,7 @@
     <OutputType>Library</OutputType>
     <RootNamespace>JobSearchScorecard</RootNamespace>
     <AssemblyName>JobSearchScorecard.PCL</AssemblyName>
-    <TargetFrameworkProfile>Profile78</TargetFrameworkProfile>
+    <TargetFrameworkProfile>Profile259</TargetFrameworkProfile>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -40,7 +40,6 @@
     <Compile Include="Model\StepNames.cs" />
     <Compile Include="Views\StepPage.cs" />
     <Compile Include="Views\StartPage.cs" />
-    <Compile Include="Views\TaskCell.cs" />
     <Compile Include="Views\ActivityPage.cs" />
     <Compile Include="Views\TaskDetailPage.cs" />
     <Compile Include="Views\MainStepsPage.cs" />

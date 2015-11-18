@@ -36,7 +36,8 @@ namespace JobSearchScorecard
 
 			scorePeriod = new Label () {
 				Text = "for Unknown Period",
-				FontSize = 30,
+				FontAttributes = FontAttributes.Italic,
+				FontSize = 12,
 			};
 
 			var buttonStyle = new Style (typeof(Button)) {
@@ -63,7 +64,7 @@ namespace JobSearchScorecard
 				Style = buttonStyle,
 			};
 			btnNewPeriod.Clicked += async(sender, e) => {
-				var action = await DisplayActionSheet ("Start a new period?", "No! Cancel", "YES!");
+				var action = await DisplayActionSheet ("Start a new period?", "No", "Yes");
 				if (action.StartsWith ("N"))
 					return;
 				if (App.Database.SavePeriod () != 1) {
@@ -81,7 +82,7 @@ namespace JobSearchScorecard
 			};
 			btnClearDB.Clicked += async (sender, e) => {
 				var action = await DisplayActionSheet ("Are you sure you want to delete all data?", 
-					             "No! Cancel", "YES! Blow it away!");
+					             "No", "Yes, wipe clean!");
 				if (action.StartsWith ("N"))
 					return;
 				App.Database.DeleteAll ();
@@ -114,13 +115,14 @@ namespace JobSearchScorecard
 			scoreBox.Text = totalScore.ToString ();
 
 			Color scoreColor = Color.Green;
-			if (totalScore < 50) {
+			if (totalScore < 100) {
 				scoreColor = Color.Red;
 			};
 
 			scoreBox.TextColor = scoreColor;
 
-			scorePeriod.Text = "for the period beginning " + App.Database.GetActivePeriod ().StartDT;
+			var startDateTime = App.Database.GetActivePeriod ().StartDT;
+			scorePeriod.Text = "for the period beginning " + startDateTime.ToString("dddd',' MMM d 'at' HH:mm tt");
 
 		}
 

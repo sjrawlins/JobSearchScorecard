@@ -55,7 +55,7 @@ namespace JobSearchScorecard
 			}
 		}
 
-		public IEnumerable<Task> GetTaskByUniqueStepNum (int subStepNum)
+		public IEnumerable<Task> GetTasksBySubStep (int subStepNum)
 		{
 			if (subStepNum < 0 || subStepNum >= Activity.UniqueCode) {
 				throw new IndexOutOfRangeException ("Impossible subStepNum=" + subStepNum);
@@ -64,19 +64,7 @@ namespace JobSearchScorecard
 				return database.Table<Task> ().Where (t => t.SubStep == subStepNum);
 			}
 		}
-
-		public IEnumerable<Task> GetSpecificTasksWithinPeriodForSpecific (int subStepNum)
-		{
-			lock (locker) {
-				var currentPeriod = database.Query<Period> ("select * from [Period] where [EndDt] > ?", DateTime.Now);
-				if (currentPeriod == null) {
-					throw new Exception ("In GetTasksWithinPeriod: Current period not found in database");
-				}
-				var periodStartDate = currentPeriod.First ().StartDT;
-				return database.Query<Task> ("SELECT * FROM [Task] WHERE [SubStep] = ? AND [DT] > ?", subStepNum, periodStartDate);
-			}
-		}
-
+			
 		public IEnumerable<Task> GetAllTasksWithinPeriod ()
 		{
 			lock (locker) {
@@ -118,7 +106,7 @@ namespace JobSearchScorecard
 		public int DeleteTask(int id)
 		{
 			lock (locker) {
-				Debug.WriteLine ("About to delete task with ID=" + id);
+				//Debug.WriteLine ("About to delete task with ID=" + id);
 				return database.Delete<Task>(id);
 			}
 		}
@@ -146,9 +134,10 @@ namespace JobSearchScorecard
 		{
 			int sqlReturn = 0;
 			lock (locker) {
-				// For Debug purposes, show how many rows in [Period] now
+				// For Debug purposes, show how many rows in DB, both tables, before and after
 				var countPeriod = database.Table<Period> ().Count();
-				Debug.WriteLine ("Before adding new cycle, [Period] has " + countPeriod + " rows");
+				var countTasks = database.Table<Task> ().Count();
+				Debug.WriteLine ("Before starting new period, COUNT[Period]=" + countPeriod + " COUNT[Task]=" + countTasks);
 
 				var setNow = DateTime.Now;
 				sqlReturn = database.Execute (
@@ -162,7 +151,9 @@ namespace JobSearchScorecard
 					throw new Exception("Failed to properly INSERT new row in [Period]. RC=" + sqlReturn);
 				}
 				countPeriod = database.Table<Period> ().Count();
-				Debug.WriteLine ("[Period] now has " + countPeriod + " rows");
+				countTasks = database.Table<Task> ().Count();
+				Debug.WriteLine ("After adding new period, COUNT[Period]=" + countPeriod + " COUNT[Task]=" + countTasks);
+
 				return sqlReturn;
 			}
 		}

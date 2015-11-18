@@ -10,103 +10,94 @@ namespace JobSearchScorecard
 {
 	public class ActivityPage : ContentPage
 	{
-		ListView listView;
-		int subStep;
+		ListView listCurrentTasks;
+		ListView listTaskHistory;
+		Activity theAct;
 
 		public ActivityPage (Activity act)
 		{
-			subStep = act.SubStep;
+			theAct = act;
 			Title = act.FullName + " (worth " + act.Score.ToString () + " points)";
+			Label oneTimeLabel = new Label () { FontAttributes = FontAttributes.Italic, HorizontalOptions = LayoutOptions.CenterAndExpand,};
+			if (act.OneTimeOnly) {
+				oneTimeLabel.Text = "One-time only, regardless of period";
+			}
 
-//			Label header = new Label {
-//				Text = act.FullName + " (worth " + act.Score.ToString () + " points)",
-//				FontAttributes = FontAttributes.Bold,
-//				FontSize = Device.GetNamedSize (NamedSize.Large, typeof(Label)),
-//				HorizontalOptions = LayoutOptions.Center
-//			};
-//			stack.Children.Add (header);
-		
-//			label = new Label {
-//				FontSize = Device.GetNamedSize (NamedSize.Medium, typeof(Label)),
-//				HorizontalOptions = LayoutOptions.Center,
-//				//VerticalOptions = LayoutOptions.CenterAndExpand
-//			};
-//			stack.Children.Add (label);
-
-//			if (act.OneTimeOnly) {  // One-time-only tasks: you only get one Task completion, one score
-//				// is the one-time-only Task in the DB (i.e. has it already been completed)?
-//				var loggedTasks = App.Database.GetTaskByUniqueStepNum (act.SubStep);
-//				if (loggedTasks == null) {
-//					throw new ArgumentNullException ("null loggedTasks in ActivityPage.cs");
-//				}
-//				Switch switcher = new Switch () {
-//					HorizontalOptions = LayoutOptions.Center,
-//					VerticalOptions = LayoutOptions.CenterAndExpand
-//				};
-//				if (!loggedTasks.Any ()) {  // Not currently in DB, so it's eligible for completion
-//					label.Text = "Slide switch ON to record this task";
-//					switcher.IsToggled = false;
-//					switcher.Toggled += (object sender, ToggledEventArgs e) => {
-//						Debug.WriteLine ("in Switch event");
-//						if (e.Value) {
-//							label.Text = "Done. Remember, this is a one-time-only score.";
-//						} else {
-//							label.Text = "OK, it's off now";
-//						}
-//						;
-//					};
-//					App.Database.SaveTask (new Task ((int)act.Step, act.SubStep, act.Score, 1, DateTime.Now, "Inserted 1-time only task from UI ActivityPage"));
-//				} else {  // this one-time-only task has already been recorded, so show proof
-//					switcher.IsToggled = true;
-//					var theTask = loggedTasks.First ();
-//					stack.Children.Add (new Label () { Text = "Slide switch OFF to remove this task" });
-//					label.Text = "Task Completion recorded on: " +
-//					theTask.DT.Date.ToString ("f");  // C# preset format
-//				}
-//				stack.Children.Add (switcher);
-//				theView.Content = stack;
-//			} else {  
-			// Allow multiple task-completions here, so must use a scrolling ListView
-			listView = new ListView ();
-			//listView.ItemsSource = App.Database.GetAllTasksWithinPeriod ().Where (t => t.SubStep == act.SubStep);
-			listView.ItemTemplate = new DataTemplate (() => {
+			// There might be multiple task-completions here, so use a scrolling ListView
+			listCurrentTasks = new ListView ();
+			listCurrentTasks.ItemTemplate = new DataTemplate (() => {
 				var cell = new TextCell ();
+				cell.Detail = string.Format("Worth {0} points in current period", theAct.Score);
 				cell.SetBinding<Task> (TextCell.TextProperty, t => t.DT);
 				return cell;
-				//(typeof (TaskCell)
 			});
-			listView.ItemSelected += (sender, e) => {
+			listCurrentTasks.ItemSelected += (sender, e) => {
 				var theTask = (Task)e.SelectedItem;
-				var taskDetailPage = new TaskDetailPage (theTask);
+				var taskDetailPage = new TaskDetailPage ("Edit current task");
 				taskDetailPage.BindingContext = theTask;
 				Navigation.PushAsync (taskDetailPage);
 			};
 
-			var layout = new StackLayout ();
-			layout.Children.Add (listView);
-			layout.VerticalOptions = LayoutOptions.FillAndExpand;
-			Content = layout;
-
-			#region toolbar
-			ToolbarItem tbi = null;
-			tbi = new ToolbarItem ("+", null, () => {
-				var newTask = new Task((int) act.Step, act.SubStep, act.Score, (act.OneTimeOnly ? 1 : 0), DateTime.Now, string.Empty);
-				var taskDetailPage = new TaskDetailPage (newTask);
-				taskDetailPage.BindingContext = newTask;
+			// There might be multiple task-completions here, so use a scrolling ListView
+			listTaskHistory = new ListView ();
+			listTaskHistory.ItemTemplate = new DataTemplate (() => {
+				var cell = new TextCell ();
+				cell.DetailColor = Color.Red;
+				cell.Detail = "past period, not in current score";
+				cell.SetBinding<Task> (TextCell.TextProperty, t => t.DT);
+				return cell;
+			});
+			listTaskHistory.ItemSelected += (sender, e) => {
+				var theTask = (Task)e.SelectedItem;
+				var taskDetailPage = new TaskDetailPage ("Edit history");
+				taskDetailPage.BindingContext = theTask;
 				Navigation.PushAsync (taskDetailPage);
-			}
-			);
-			ToolbarItems.Add (tbi);
-			#endregion
+			};
+				
+			var layout = new StackLayout ();
+			layout.Children.Add (oneTimeLabel);
+			layout.Children.Add (listCurrentTasks);
+			var lineSeparator = new BoxView () { Color = Color.Blue, WidthRequest = 100, HeightRequest = 8 };
+			layout.Children.Add (lineSeparator);
+			layout.Children.Add (listTaskHistory);
+			layout.HorizontalOptions = LayoutOptions.Center;
+			Content = layout;
 
 		}
 
 		protected override void OnAppearing ()
 		{
+			IEnumerable<Task> currentTasks;
+			IEnumerable<Task> pastPeriodTasks;
 			base.OnAppearing ();
 			// reset the 'resume' id, since we just want to re-start here
 			//((App)App.Current).ResumeAtTodoId = -1;
-			listView.ItemsSource =  App.Database.GetAllTasksWithinPeriod ().Where (t => t.SubStep == subStep);
+			var startDateTime = App.Database.GetActivePeriod ().StartDT;
+
+			currentTasks = App.Database.GetAllTasksWithinPeriod ().Where (t => t.SubStep == theAct.SubStep);
+			pastPeriodTasks = App.Database.GetTasksBySubStep (theAct.SubStep).Where (t => t.DT < startDateTime);
+			var anyAtAll = currentTasks.Any () || pastPeriodTasks.Any ();
+
+			ToolbarItems.Clear ();  // for Android only (somehow the "Add" buttons would accumulate without this statement)
+
+			// Determining whether or not to place an "Add" action button in the urh corner.
+			// First: don't add it if it's already there!  Next up:
+			// if 1-time-only task, then you can only create it once (regardless of time period), so don't show Add button if already completed
+			if (!ToolbarItems.Any () && !theAct.OneTimeOnly || !anyAtAll) {
+				ToolbarItem tbi = null;
+				tbi = new ToolbarItem ("Add", null, () => {
+					var newTask = new Task ((int)theAct.Step, theAct.SubStep, theAct.Score, (theAct.OneTimeOnly ? 1 : 0), DateTime.Now, string.Empty);
+					var taskDetailPage = new TaskDetailPage ("Add new (" + theAct.Score.ToString () + " pts)");
+					taskDetailPage.BindingContext = newTask;
+					Navigation.PushAsync (taskDetailPage);
+				}
+				);
+				ToolbarItems.Add (tbi);
+			}
+
+			listCurrentTasks.ItemsSource = currentTasks;
+			listTaskHistory.ItemsSource = pastPeriodTasks;
+
 		}
 	}
 }

@@ -10,7 +10,7 @@ namespace JobSearchScorecard
 		public TaskCell ()
 		{
 			var taskDate = new Label {
-				Text = TaskDate.ToString ("f"),
+				Text = TaskDate.ToString ("dddd',' MMM d yyyy'at' HH:mm"),
 				YAlign = TextAlignment.Center,
 			};
 
