@@ -46,7 +46,7 @@
     <ConsolePause>false</ConsolePause>
     <MtouchArch>ARMv7, ARM64</MtouchArch>
     <MtouchProfiling>true</MtouchProfiling>
-    <CodesignKey>iPhone Developer: Steve Rawlins (KBP9443TNW)</CodesignKey>
+    <CodesignKey>iPhone Developer</CodesignKey>
     <MtouchDebug>true</MtouchDebug>
     <MtouchUseRefCounting>true</MtouchUseRefCounting>
     <MtouchI18n>
@@ -55,7 +55,7 @@
     <AssemblyName>JobSearchScorecardiOS</AssemblyName>
     <IpaPackageName>
     </IpaPackageName>
-    <CodesignProvision>65439591-3ead-4bcf-b545-28299e1b5162</CodesignProvision>
+    <CodesignProvision>d71b6bd4-8d5b-49b9-9102-c59386828bdd</CodesignProvision>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhone' ">
     <DebugType>full</DebugType>
