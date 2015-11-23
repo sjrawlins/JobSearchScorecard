@@ -56,10 +56,10 @@ namespace JobSearchScorecard
 			// Some activities are Only Once-in-a-lifetime (typically "Read Documents")
 
 			// STEP 0 - ALL
-			Activities.Add (Steps.All, new List<Activity> (8) { 
-				new Activity (Steps.All, "Prayer", 10),
-				new Activity (Steps.All, "Read Scripture", 10),
-				new Activity (Steps.All, "Share daily plans with family", 4),
+			Activities.Add (Steps.EveryDay, new List<Activity> (8) { 
+				new Activity (Steps.EveryDay, "Prayer", 10),
+				new Activity (Steps.EveryDay, "Read Scripture", 10),
+				new Activity (Steps.EveryDay, "Share daily plans with family", 4),
 			}
 			);   // subSteps 0 .. 2
 
@@ -155,6 +155,14 @@ namespace JobSearchScorecard
 				new Activity (Steps.FollowUp, "Send / Deliver thank you notes within 30 minutes after interview", 15),
 				new Activity (Steps.FollowUp, "Send follow-up technical job article to hiring manager", 5),
 				new Activity (Steps.FollowUp, "Thank you note for \"Rejection Letter\"", 20),
+			}
+			);
+
+			// Step 7 - Celebrate
+			Activities.Add(Steps.Celebrate, new List<Activity> (2) {
+				new Activity (Steps.Celebrate, "Bring treats to your Job Support Group", 50),
+				new Activity (Steps.Celebrate, "Send thank-you notes", 50),
+				new Activity (Steps.Celebrate, "Build and Maintain your network", 50),
 			}
 			);
 

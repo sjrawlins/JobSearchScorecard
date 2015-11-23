@@ -6,14 +6,15 @@ namespace JobSearchScorecard
 	// Top-level Steps in the Job Search process (note: taking no chances on the underlying enum integer values)
 	public enum Steps
 	{
-		All = 0,
+		EveryDay = 0,
 		Attitude = 1,
 		Assessments = 2,
 		MarketingStrategy = 3,
 		MarketingMaterials = 4,
 		Interviewing = 5,
 		FollowUp = 6,
-		//Custom = 7,   // maybe later... allow user to create their own STEP
+		Celebrate = 7,
+		//Custom = xx,   // maybe later... allow user to create their own STEP
 	}
 
 	public class StepNames
@@ -25,8 +26,8 @@ namespace JobSearchScorecard
 		{
 			int enumIndex = 0;
 			stepDictionary = new Dictionary<Steps, string> ();
-			stepList = new List<string> { "All", "Attitude", "Assessments", "Marketing Strategy", "Marketing Materials", "Interviewing",
-				"Follow-up",
+			stepList = new List<string> { "Everyday", "Attitude", "Assessments", "Marketing Strategy", "Marketing Materials", "Interviewing",
+				"Follow-up", "Celebrate",
 			};
 			foreach (var s in stepList) {
 				stepDictionary.Add ((Steps)enumIndex, s);
