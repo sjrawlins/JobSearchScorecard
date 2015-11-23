@@ -64,6 +64,14 @@ namespace JobSearchScorecard
 				return database.Table<Task> ().Where (t => t.SubStep == subStepNum);
 			}
 		}
+
+		public IEnumerable<Task> GetCurrentTasksBySubStep (int subStepNum)
+		{
+			if (subStepNum < 0 || subStepNum >= Activity.UniqueCode) {
+				throw new IndexOutOfRangeException ("Impossible subStepNum=" + subStepNum);
+			}
+			return GetAllTasksWithinPeriod ().Where (t => t.SubStep == subStepNum);
+		}
 			
 		public IEnumerable<Task> GetAllTasksWithinPeriod ()
 		{
@@ -157,5 +165,12 @@ namespace JobSearchScorecard
 				return sqlReturn;
 			}
 		}
+		public IEnumerable<Period> ListPeriods()
+		{
+			lock (locker) {
+				return database.Query<Period> ("SELECT * FROM [Period] ORDER By [StartDT] DESC");
+			}
+		}
+
 	}
 }

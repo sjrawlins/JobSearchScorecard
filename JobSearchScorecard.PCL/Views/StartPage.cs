@@ -28,8 +28,8 @@ namespace JobSearchScorecard
 			Debug.WriteLine ("Database now has " + App.Database.GetPeriods ().Count () + " rows in <Period>");
 
 			scoreBox = new Label () {
-				Text = "TheScore",
-				FontSize = 60,
+				Text = "Score:",
+				FontSize = 55,
 				FontAttributes = FontAttributes.Bold,
 				HorizontalOptions = LayoutOptions.Center
 			};  // Text set in the OnAppearing override in order to grab latest total score
@@ -50,7 +50,7 @@ namespace JobSearchScorecard
 			};
 
 			var btnShowSteps = new Button {
-				Text = "Job Search Steps",
+				Text = "Earn points using Job Search Steps",
 				Style = buttonStyle,
 			};
 			btnShowSteps.Clicked += async (sender, e) => {
@@ -60,7 +60,7 @@ namespace JobSearchScorecard
 
 			// Two buttons: one for starting a new period, the other for wiping-out the database
 			var btnNewPeriod = new Button {
-				Text = "Start New Period",
+				Text = "Start New Scoring Period",
 				Style = buttonStyle,
 			};
 			btnNewPeriod.Clicked += async(sender, e) => {
@@ -73,8 +73,33 @@ namespace JobSearchScorecard
 				this.OnAppearing ();
 			};
 
+			var btnPeriods = new Button {
+				Text = "Show Score Period History",
+				Style = buttonStyle,
+			};
+			btnPeriods.Clicked += async (sender, e) => {
+				await this.Navigation.PushAsync(new HistoryPage());
+			};
+
+
+//			var btnFb = new Button {
+//				Text = "Share my Score on Facebook",
+//				Style = buttonStyle,
+//			};
+//			btnFb.Clicked  += (sender, e) => {
+//				Device.OpenUri(new Uri("http://jobtransition.net"));
+//			};
+
+			var btnLaunchJTSG = new Button {
+				Text = "Take me to Job Transition Website",
+				Style = buttonStyle,
+			};
+			btnLaunchJTSG.Clicked  += (sender, e) => {
+				Device.OpenUri(new Uri("http://jobtransition.net"));
+			};
+
 			var lblResets = new Label () {
-				Text = "WARNING: The following button removes all data, all history - the equivalent of a fresh install of the app ",
+				Text = "WARNING: The following button removes all data - the equivalent of a fresh install of the app",
 			}; 
 			var btnClearDB = new Button { 
 				Text = "Clear Entire Database",
@@ -96,6 +121,9 @@ namespace JobSearchScorecard
 					scorePeriod,
 					btnShowSteps,
 					btnNewPeriod,
+					btnPeriods,
+//					btnFb,
+					btnLaunchJTSG,
 					new BoxView {Color = Color.Transparent, HeightRequest = 5},
 					lblResets,
 					btnClearDB,
@@ -112,7 +140,7 @@ namespace JobSearchScorecard
 
 			totalScore = CalculateScore (App.Database.GetAllTasksWithinPeriod ());
 
-			scoreBox.Text = totalScore.ToString ();
+			scoreBox.Text = "Score: " + totalScore.ToString ();
 
 			Color scoreColor = Color.Green;
 			if (totalScore < 100) {
@@ -127,7 +155,7 @@ namespace JobSearchScorecard
 		}
 
 
-		public int CalculateScore (IEnumerable<Task> tasksAccomplished)
+		public static int CalculateScore (IEnumerable<Task> tasksAccomplished)
 		{
 			int tempScore = 0;
 			bool foundIt = false;

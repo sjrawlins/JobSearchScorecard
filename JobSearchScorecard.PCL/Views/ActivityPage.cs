@@ -17,11 +17,13 @@ namespace JobSearchScorecard
 		public ActivityPage (Activity act)
 		{
 			theAct = act;
-			Title = act.FullName + " (worth " + act.Score.ToString () + " points)";
-			Label oneTimeLabel = new Label () { FontAttributes = FontAttributes.Italic, HorizontalOptions = LayoutOptions.CenterAndExpand,};
+			Title = act.FullName;
+			string fullDescription = string.Format ("{0}, worth {1} points", act.FullName, act.Score);
+			Label lblFullDescription = new Label () { FontAttributes = FontAttributes.Italic, HorizontalOptions = LayoutOptions.CenterAndExpand,};
 			if (act.OneTimeOnly) {
-				oneTimeLabel.Text = "One-time only, regardless of period";
+				fullDescription = fullDescription + " (1-time only)";
 			}
+			lblFullDescription.Text = fullDescription;
 
 			// There might be multiple task-completions here, so use a scrolling ListView
 			listCurrentTasks = new ListView ();
@@ -55,7 +57,7 @@ namespace JobSearchScorecard
 			};
 				
 			var layout = new StackLayout ();
-			layout.Children.Add (oneTimeLabel);
+			layout.Children.Add (lblFullDescription);
 			layout.Children.Add (listCurrentTasks);
 			var lineSeparator = new BoxView () { Color = Color.Blue, WidthRequest = 100, HeightRequest = 8 };
 			layout.Children.Add (lineSeparator);
@@ -74,7 +76,7 @@ namespace JobSearchScorecard
 			//((App)App.Current).ResumeAtTodoId = -1;
 			var startDateTime = App.Database.GetActivePeriod ().StartDT;
 
-			currentTasks = App.Database.GetAllTasksWithinPeriod ().Where (t => t.SubStep == theAct.SubStep);
+			currentTasks = App.Database.GetCurrentTasksBySubStep(theAct.SubStep);
 			pastPeriodTasks = App.Database.GetTasksBySubStep (theAct.SubStep).Where (t => t.DT < startDateTime);
 			var anyAtAll = currentTasks.Any () || pastPeriodTasks.Any ();
 

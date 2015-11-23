@@ -49,12 +49,14 @@ namespace JobSearchScorecard
 			var lineSeparator = new BoxView () { Color = Color.Black, WidthRequest = 100, HeightRequest = 2 };
 
 			Content = new StackLayout {
-				//VerticalOptions = LayoutOptions.StartAndExpand,
-				Padding = new Thickness(20),
+				//Orientation = StackOrientation.Horizontal,
+				//HorizontalOptions = LayoutOptions.Center,
+
+				Padding = new Thickness(5),
 				Children = {
-					saveButton, deleteButton, cancelButton,
-					lineSeparator,
 					notesLabel, notesEntry,
+					lineSeparator,
+					saveButton, deleteButton, cancelButton,
 				}
 			};
 
