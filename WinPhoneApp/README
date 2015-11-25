@@ -1,0 +1,10 @@
+I moved the WinPhone container from here over to the folder called simply WinPhone
+
+WinPhone (the other one) has Windows Phone 8.1 and corresponding SQLite.Net per
+Xamarin instructions.
+
+I got it to build 11/25/2015!
+
+Keeping both because ... want to be safe.
+
+But only WinPhone is in the solution
