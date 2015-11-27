@@ -54,9 +54,16 @@ namespace JobSearchScorecard
 				Style = buttonStyle,
 			};
 			btnShowSteps.Clicked += async (sender, e) => {
-				await this.Navigation.PushAsync(new MainStepsPage());
+				await this.Navigation.PushAsync (new MainStepsPage ());
 			};
 
+			var btnSpeak = new Button { 
+				Text = "Speak",
+				Style = buttonStyle,
+			};
+			btnSpeak.Clicked += (sender, e) => {
+				DependencyService.Get<ITextToSpeech> ().Speak (scoreBox.Text);
+			};
 
 			// Two buttons: one for starting a new period, the other for wiping-out the database
 			var btnNewPeriod = new Button {
@@ -78,7 +85,7 @@ namespace JobSearchScorecard
 				Style = buttonStyle,
 			};
 			btnPeriods.Clicked += async (sender, e) => {
-				await this.Navigation.PushAsync(new HistoryPage());
+				await this.Navigation.PushAsync (new HistoryPage ());
 			};
 
 
@@ -94,8 +101,8 @@ namespace JobSearchScorecard
 				Text = "Take me to Job Transition Website",
 				Style = buttonStyle,
 			};
-			btnLaunchJTSG.Clicked  += (sender, e) => {
-				Device.OpenUri(new Uri("http://jobtransition.net"));
+			btnLaunchJTSG.Clicked += (sender, e) => {
+				Device.OpenUri (new Uri ("http://jobtransition.net"));
 			};
 
 			var lblResets = new Label () {
@@ -115,16 +122,17 @@ namespace JobSearchScorecard
 			};
 				
 			this.Content = new StackLayout {
-				Padding = new Thickness(8,8),
+				Padding = new Thickness (8, 8),
 				Children = {
 					scoreBox,
 					scorePeriod,
 					btnShowSteps,
+					btnSpeak,
 					btnNewPeriod,
 					btnPeriods,
 //					btnFb,
 					btnLaunchJTSG,
-					new BoxView {Color = Color.Transparent, HeightRequest = 5},
+					new BoxView { Color = Color.Transparent, HeightRequest = 5 },
 					lblResets,
 					btnClearDB,
 				}
@@ -145,12 +153,13 @@ namespace JobSearchScorecard
 			Color scoreColor = Color.Green;
 			if (totalScore < 100) {
 				scoreColor = Color.Red;
-			};
+			}
+			;
 
 			scoreBox.TextColor = scoreColor;
 
 			var startDateTime = App.Database.GetActivePeriod ().StartDT;
-			scorePeriod.Text = "for the period beginning " + startDateTime.ToString("dddd',' MMM d 'at' HH:mm tt");
+			scorePeriod.Text = "for the period beginning " + startDateTime.ToString ("dddd',' MMM d 'at' HH:mm tt");
 
 		}
 
