@@ -58,7 +58,7 @@ namespace JobSearchScorecard
 			};
 
 			var btnSpeak = new Button { 
-				Text = "Speak",
+				Text = "Speak Score",
 				Style = buttonStyle,
 			};
 			btnSpeak.Clicked += (sender, e) => {

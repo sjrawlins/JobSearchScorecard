@@ -13,17 +13,15 @@ namespace JobSearchScorecard
 		ListView listCurrentTasks;
 		ListView listTaskHistory;
 		Activity theAct;
+		string fullDescription;
 
 		public ActivityPage (Activity act)
 		{
 			theAct = act;
 			Title = act.FullName;
-			string fullDescription = string.Format ("{0}, worth {1} points", act.FullName, act.Score);
-			Label lblFullDescription = new Label () { FontAttributes = FontAttributes.Italic, HorizontalOptions = LayoutOptions.CenterAndExpand,};
-			if (act.OneTimeOnly) {
-				fullDescription = fullDescription + " (1-time only)";
-			}
-			lblFullDescription.Text = fullDescription;
+			fullDescription = string.Format ("{0}, worth {1} points", act.FullName, act.Score);
+			Label subTitle = new Label () { FontAttributes = FontAttributes.Italic, HorizontalOptions = LayoutOptions.CenterAndExpand,};
+			subTitle.Text = string.Format ("{0} points {1}", act.Score, act.OneTimeOnly ? "(one-time only)" : string.Empty);
 
 			// There might be multiple task-completions here, so use a scrolling ListView
 			listCurrentTasks = new ListView ();
@@ -35,7 +33,7 @@ namespace JobSearchScorecard
 			});
 			listCurrentTasks.ItemSelected += (sender, e) => {
 				var theTask = (Task)e.SelectedItem;
-				var taskDetailPage = new TaskDetailPage ("Edit current task");
+				var taskDetailPage = new TaskDetailPage (fullDescription, false);
 				taskDetailPage.BindingContext = theTask;
 				Navigation.PushAsync (taskDetailPage);
 			};
@@ -51,13 +49,13 @@ namespace JobSearchScorecard
 			});
 			listTaskHistory.ItemSelected += (sender, e) => {
 				var theTask = (Task)e.SelectedItem;
-				var taskDetailPage = new TaskDetailPage ("Edit history");
+				var taskDetailPage = new TaskDetailPage (fullDescription, false);
 				taskDetailPage.BindingContext = theTask;
 				Navigation.PushAsync (taskDetailPage);
 			};
 				
 			var layout = new StackLayout ();
-			layout.Children.Add (lblFullDescription);
+			layout.Children.Add (subTitle);
 			layout.Children.Add (listCurrentTasks);
 			var lineSeparator = new BoxView () { Color = Color.Blue, WidthRequest = 100, HeightRequest = 8 };
 			layout.Children.Add (lineSeparator);
@@ -88,8 +86,8 @@ namespace JobSearchScorecard
 			if (!ToolbarItems.Any () && !theAct.OneTimeOnly || !anyAtAll) {
 				ToolbarItem tbi = null;
 				tbi = new ToolbarItem ("Add", null, () => {
-					var newTask = new Task ((int)theAct.Step, theAct.SubStep, theAct.Score, (theAct.OneTimeOnly ? 1 : 0), DateTime.Now, string.Empty);
-					var taskDetailPage = new TaskDetailPage ("Add new (" + theAct.Score.ToString () + " pts)");
+					var newTask = new Task ((int)theAct.Step, theAct.SubStep, theAct.Score, (theAct.OneTimeOnly ? 1 : 0), DateTime.Now, null);
+					var taskDetailPage = new TaskDetailPage (fullDescription, true);
 					taskDetailPage.BindingContext = newTask;
 					Navigation.PushAsync (taskDetailPage);
 				}

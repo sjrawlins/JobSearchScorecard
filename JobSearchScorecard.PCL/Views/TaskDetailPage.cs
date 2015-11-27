@@ -10,16 +10,15 @@ namespace JobSearchScorecard
 {
 	public class TaskDetailPage : ContentPage
 	{
-		Editor notesEntry = null;
 
-		public TaskDetailPage (string pageTitle)
+		public TaskDetailPage (string fullDescription, bool addNew)
 		{
-			Title = pageTitle;
+			Title = fullDescription;
 
 			NavigationPage.SetHasNavigationBar (this, true);
 
 			var notesLabel = new Label { Text = "Notes about this task (optional):" };
-			notesEntry = new Editor ();
+			var notesEntry = new Editor ();
 
 			// cannot get just the right "look" that will be satisfactory for both Android and iOS
 			//notesEntry.BackgroundColor = new Color (0, 0x10, 0x10);
@@ -29,21 +28,35 @@ namespace JobSearchScorecard
 			var saveButton = new Button { Text = "Save", BorderWidth = 2, };
 			saveButton.Clicked += (sender, e) => {
 				var taskItem = (Task)BindingContext;
-				App.Database.SaveTask(taskItem);
-				this.Navigation.PopAsync();
+				App.Database.SaveTask (taskItem);
+				this.Navigation.PopAsync ();
 			};
 
+			// Do not activate DELETE button if you are adding a new task
 			var deleteButton = new Button { Text = "Delete", BorderWidth = 2, };
-			deleteButton.Clicked += (sender, e) => {
-				var taskItem = (Task)BindingContext;
-				App.Database.DeleteTask(taskItem.ID);
-				this.Navigation.PopAsync();
+			if (addNew) {
+				deleteButton.IsEnabled = false;
+			} else {
+				deleteButton.Clicked += (sender, e) => {
+					var taskItem = (Task)BindingContext;
+					App.Database.DeleteTask (taskItem.ID);
+					this.Navigation.PopAsync ();
+				};
+			}
+
+			var speakTaskDescr = new Button { Text = "Speak Task", BorderWidth = 2, };
+			speakTaskDescr.Clicked += (sender, e) => {
+				DependencyService.Get<ITextToSpeech> ().Speak (fullDescription);
+			};
+				
+			var speakNotes = new Button { Text = "Speak Notes", BorderWidth = 2, };
+			speakNotes.Clicked += (sender, e) => {
+				DependencyService.Get<ITextToSpeech> ().Speak (notesEntry.Text);
 			};
 
 			var cancelButton = new Button { Text = "Cancel", BorderWidth = 2, };
 			cancelButton.Clicked += (sender, e) => {
-				//var taskItem = (Task)BindingContext;   WHY EVEN HAVE THIS LINE ON A CANCEL???
-				this.Navigation.PopAsync();
+				this.Navigation.PopAsync ();
 			};
 
 			var lineSeparator = new BoxView () { Color = Color.Black, WidthRequest = 100, HeightRequest = 2 };
@@ -52,11 +65,15 @@ namespace JobSearchScorecard
 				//Orientation = StackOrientation.Horizontal,
 				//HorizontalOptions = LayoutOptions.Center,
 
-				Padding = new Thickness(5),
+				Padding = new Thickness (5),
 				Children = {
 					notesLabel, notesEntry,
 					lineSeparator,
-					saveButton, deleteButton, cancelButton,
+					saveButton, 
+					deleteButton,
+					speakTaskDescr,
+					speakNotes,
+					cancelButton,
 				}
 			};
 
