@@ -48,6 +48,14 @@ namespace JobSearchScorecard
 				//return query;
 			}
 		}
+		public int UpdateCurrentScore(int score)
+		{
+			var currentPeriod = GetActivePeriod ();
+			currentPeriod.Score = score;
+			lock (locker) {
+				return database.Update (currentPeriod);
+			}
+		}
 		public IEnumerable<Task> GetTasks ()
 		{
 			lock (locker) {

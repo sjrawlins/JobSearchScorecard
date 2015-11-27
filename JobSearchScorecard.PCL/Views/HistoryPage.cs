@@ -10,14 +10,16 @@ namespace JobSearchScorecard
 
 		public HistoryPage ()
 		{
-			Title = "Period History & Scores";
+			Title = "Score History";
 
 			var periodList = new ListView ();
+			var lblDesc = new Label ();
+			lblDesc.Text = "Score / For Period Beginning";
 
 			periodList.ItemTemplate = new DataTemplate (() => {
 				var cell = new TextCell ();
-				cell.SetBinding<Period> (TextCell.TextProperty, p => p.StartDT);
-				cell.SetBinding<Period> (TextCell.DetailProperty, p => p.Score);
+				cell.SetBinding<Period> (TextCell.TextProperty, p => p.Score);
+				cell.SetBinding<Period> (TextCell.DetailProperty, p => p.StartDT);
 				return cell;
 			});
 
@@ -25,6 +27,7 @@ namespace JobSearchScorecard
 			periodList.ItemsSource = periodHistory;
 		
 			var layout = new StackLayout ();
+			layout.Children.Add (lblDesc);
 			layout.Children.Add (periodList);
 			Content = layout;
 		}

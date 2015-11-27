@@ -28,7 +28,7 @@ namespace JobSearchScorecard
 			Debug.WriteLine ("Database now has " + App.Database.GetPeriods ().Count () + " rows in <Period>");
 
 			scoreBox = new Label () {
-				Text = "Score:",
+				Text = "No Score",
 				FontSize = 55,
 				FontAttributes = FontAttributes.Bold,
 				HorizontalOptions = LayoutOptions.Center
@@ -139,8 +139,8 @@ namespace JobSearchScorecard
 			base.OnAppearing ();
 
 			totalScore = CalculateScore (App.Database.GetAllTasksWithinPeriod ());
-
-			scoreBox.Text = "Score: " + totalScore.ToString ();
+			App.Database.UpdateCurrentScore (totalScore);
+			scoreBox.Text = totalScore.ToString () + " points";
 
 			Color scoreColor = Color.Green;
 			if (totalScore < 100) {
