@@ -20,6 +20,7 @@ namespace JobSearchScorecard
 			// create the tables
 			database.CreateTable<Task>();
 			database.CreateTable<Period> ();
+			database.CreateTable<Settings> ();
 			if (database.Table<Period> ().Count() == 0) {
 				// only insert the data if it doesn't already exist
 				var newPeriod = new Period ();
@@ -37,7 +38,7 @@ namespace JobSearchScorecard
 			IEnumerable<Period> periodRows;
 
 			lock (locker) {
-				periodRows = database.Query<Period> ("select * from [Period] where [EndDt] > ?", DateTime.Now);
+				periodRows = database.Query<Period> ("select * from [Period] where [EndDt] = ?", DateTime.MaxValue);
 				if (periodRows == null) {
 					throw new Exception ("In GetActivePeriod: Current period not found in database");
 				}
@@ -80,21 +81,32 @@ namespace JobSearchScorecard
 			}
 			return GetAllTasksWithinPeriod ().Where (t => t.SubStep == subStepNum);
 		}
+
+		public IEnumerable<Task> GetCurrentTasksByStep (Steps step)
+		{
+			return GetAllTasksWithinPeriod ().Where (t => t.Step == (int) step);
+		}
 			
 		public IEnumerable<Task> GetAllTasksWithinPeriod ()
 		{
 			lock (locker) {
-				var currentPeriod = database.Query<Period> ("select * from [Period] where [EndDt] > ?", DateTime.Now);
+				var currentPeriod = database.Query<Period> ("select * from [Period] where [EndDt] = ?", DateTime.MaxValue);
 				if (currentPeriod == null) {
 					throw new Exception ("In GetTasksWithinPeriod: SELECT currentPeriod returned null List");
 				}
 				if (currentPeriod.Any ()) {
 					// There should really only be one such row at this point, but a List needs a First...
 					var periodStartDate = currentPeriod.First ().StartDT;
+					// All completed tasks within the *current period* 
 					return database.Query<Task> ("SELECT * FROM [Task] WHERE [DT] > ?", periodStartDate);
 				} else {
-					// the app does not function without a Current Period
-					throw new Exception ("In GetTasksWithinPeriod: No Current Period");
+					// the app does not function without a Current Period, so 
+					// if we reach this point - something's wrong with the app OR the device's clock went backwards
+					// So create a current period!
+					var newPeriod = new Period ();
+					database.Insert (newPeriod);
+					return new List<Task> ();
+					//throw new Exception ("In GetTasksWithinPeriod: No Current Period");
 				}
 			}
 		}
@@ -157,9 +169,9 @@ namespace JobSearchScorecard
 
 				var setNow = DateTime.Now;
 				sqlReturn = database.Execute (
-					                "update [Period] set [EndDt] = ? where [EndDt] > ? ", setNow, setNow);
+					                "update [Period] set [EndDt] = ? where [EndDt] = ? ", setNow, DateTime.MaxValue);
 				if (sqlReturn > 1) {
-					throw new Exception("Failed to properly UPDATE row to end current [Period]. RC=" + sqlReturn);
+					throw new Exception("Failed to cap [Period] Should be only 1 row with [EndDt]=MaxValue. RC=" + sqlReturn);
 				}
 				var newPeriod = new Period ();
 				sqlReturn = database.Insert (newPeriod);
@@ -177,6 +189,24 @@ namespace JobSearchScorecard
 		{
 			lock (locker) {
 				return database.Query<Period> ("SELECT * FROM [Period] ORDER By [StartDT] DESC");
+			}
+		}
+
+		public Settings GetSettings () 
+		{
+			lock (locker) {
+				return database.Table<Settings> ().FirstOrDefault ();
+			}
+		}
+		public int SaveSettings (Settings item) 
+		{
+			lock (locker) {
+				if (item.ID != 0) {
+					database.Update(item);
+					return item.ID;
+				} else {
+					return database.Insert(item);
+				}
 			}
 		}
 

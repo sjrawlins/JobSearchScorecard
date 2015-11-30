@@ -18,7 +18,7 @@ namespace JobSearchScorecard
 		{
 			var startNow = DateTime.Now;
 			StartDT = startNow;
-			EndDT = startNow.AddYears (1);  // because it needs some value, and 1-year out makes more sense to me than a "max" date
+			EndDT = DateTime.MaxValue;
 			Score = 0;
 		}
 	}

@@ -24,8 +24,11 @@ namespace JobSearchScorecard
 				//currentTasks = MockUpTasks ();  // if you wish to mock-up some completed tasks
 				Debug.WriteLine ("Built Activities Dictionary with : " + Activity.UniqueCode + " unique entries");
 			}
-			Debug.WriteLine ("Database now has " + App.Database.GetTasks ().Count () + " rows in <Task>");
-			Debug.WriteLine ("Database now has " + App.Database.GetPeriods ().Count () + " rows in <Period>");
+			Debug.WriteLine ("Database Table Counts at Start-Up:");
+			Debug.WriteLine ("[Task].Count = " + App.Database.GetTasks ().Count () );
+			Debug.WriteLine ("[Period]Database now has " + App.Database.GetPeriods ().Count () + " rows in <Period>");
+			string settingsState = App.Database.GetSettings () == null ? " empty" : " one row";
+			Debug.WriteLine ("[Settings] is " + settingsState);
 
 			scoreBox = new Label () {
 				Text = "No Score",
@@ -105,6 +108,14 @@ namespace JobSearchScorecard
 				Device.OpenUri (new Uri ("http://jobtransition.net"));
 			};
 
+			var btnSettings = new Button {
+				Text = "Update your Email and other settings",
+				Style = buttonStyle,
+			};
+			btnSettings.Clicked += async (sender, e) => {
+				await this.Navigation.PushAsync (new SettingsPage ());
+			};
+
 			var lblResets = new Label () {
 				Text = "WARNING: The following button removes all data - the equivalent of a fresh install of the app",
 			}; 
@@ -132,6 +143,7 @@ namespace JobSearchScorecard
 					btnPeriods,
 //					btnFb,
 					btnLaunchJTSG,
+					btnSettings,
 					new BoxView { Color = Color.Transparent, HeightRequest = 5 },
 					lblResets,
 					btnClearDB,

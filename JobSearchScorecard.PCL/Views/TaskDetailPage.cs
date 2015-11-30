@@ -43,12 +43,6 @@ namespace JobSearchScorecard
 					this.Navigation.PopAsync ();
 				};
 			}
-
-			var speakTaskDescr = new Button { Text = "Speak Task", BorderWidth = 2, };
-			speakTaskDescr.Clicked += (sender, e) => {
-				DependencyService.Get<ITextToSpeech> ().Speak (fullDescription);
-			};
-				
 			var speakNotes = new Button { Text = "Speak Notes", BorderWidth = 2, };
 			speakNotes.Clicked += (sender, e) => {
 				DependencyService.Get<ITextToSpeech> ().Speak (notesEntry.Text);
@@ -71,7 +65,6 @@ namespace JobSearchScorecard
 					lineSeparator,
 					saveButton, 
 					deleteButton,
-					speakTaskDescr,
 					speakNotes,
 					cancelButton,
 				}

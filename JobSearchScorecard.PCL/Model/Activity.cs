@@ -56,14 +56,14 @@ namespace JobSearchScorecard
 			// Some activities are Only Once-in-a-lifetime (typically "Read Documents")
 
 			// STEP 0 - ALL
-			Activities.Add (Steps.EveryDay, new List<Activity> (8) { 
-				new Activity (Steps.EveryDay, "Prayer", 10),
-				new Activity (Steps.EveryDay, "Read Scripture", 10),
-				new Activity (Steps.EveryDay, "Share daily plans with family", 4),
+			Activities.Add (Steps.Daily, new List<Activity> (8) { 
+				new Activity (Steps.Daily, "Prayer", 10),
+				new Activity (Steps.Daily, "Read Scripture", 10),
+				new Activity (Steps.Daily, "Share daily plans with family", 4),
 			}
 			);   // subSteps 0 .. 2
 
-			// STEP 1 - ATTITUDE
+			// STEP 1 - ATTITUDE  // subSteps 3 .. 11   
 			Activities.Add (Steps.Attitude, new List<Activity> (16) {
 				new Activity (Steps.Attitude, "Read Documents and list 3 most important items", 5, true),
 				new Activity (Steps.Attitude, "List negative attitudes", 10),
@@ -75,9 +75,8 @@ namespace JobSearchScorecard
 				new Activity (Steps.Attitude, "Join a Toastmasters Club", 10, true),
 				new Activity (Steps.Attitude, "Gain new Job Skills", 15),
 			}
-			);  // subSteps 3 .. 11   (10 is the TM task)
-
-			// Step 2 - ASSESSMENTS
+			);  
+			// Step 2 - ASSESSMENTS   (subSteps 4 .. 12)
 			Activities.Add (Steps.Assessments, new List<Activity> (16) {
 				new Activity (Steps.Assessments, "Read Documents", 20, true),
 				new Activity (Steps.Assessments, "Document 15 best accomplishments with STAR stories", 5),
@@ -91,7 +90,7 @@ namespace JobSearchScorecard
 			}
 			);
 
-			// Step 3 - MARKETING STRATEGY
+			// Step 3 - MARKETING STRATEGY  (subSteps 13 .. 25)
 			Activities.Add (Steps.MarketingStrategy, new List<Activity> (16) {
 				new Activity (Steps.MarketingStrategy, "Read Documents", 8, true),
 				new Activity (Steps.MarketingStrategy, "Define and document marketing strategy", 8),
@@ -109,7 +108,7 @@ namespace JobSearchScorecard
 			}
 			);
 
-			// Step 4 - MARKETING MATERIALS
+			// Step 4 - MARKETING MATERIALS  ( .. 35)
 			Activities.Add (Steps.MarketingMaterials, new List<Activity> (16) {
 				new Activity (Steps.MarketingMaterials, "Read Documents", 8, true),
 				new Activity (Steps.MarketingMaterials, "Define and document your two part Job Objective",	10),
@@ -126,7 +125,7 @@ namespace JobSearchScorecard
 
 			// Step 5 - INTERVIEWING
 			Activities.Add (Steps.Interviewing, new List<Activity> (32) {
-				new Activity (Steps.MarketingStrategy, "Read Documents", 8, true),
+				new Activity (Steps.Interviewing, "Read Documents", 8, true),
 				new Activity (Steps.Interviewing, "Read the \"64 Toughest Questions\"",	6),
 				new Activity (Steps.Interviewing, "Document responses to \"64 Toughest Questions\" using STAR stories",	30),
 				new Activity (Steps.Interviewing, "Getting Interviews - Document Strategy",	10),

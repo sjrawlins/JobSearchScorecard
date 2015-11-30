@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Java.Lang;
 using JobSearchScorecard;
 
-[assembly: Dependency (typeof (TextToSpeech_Android))]
+[assembly: Dependency (typeof(TextToSpeech_Android))]
 
 namespace JobSearchScorecard
 {
@@ -12,6 +12,7 @@ namespace JobSearchScorecard
 	{
 		TextToSpeech speaker;
 		string toSpeak;
+
 		public TextToSpeech_Android ()
 		{
 		}
@@ -20,26 +21,28 @@ namespace JobSearchScorecard
 		{
 			var c = Forms.Context; 
 			toSpeak = text;
-			if (speaker == null)
+			if (speaker == null) {
 				speaker = new TextToSpeech (c, this);
-			else
-			{
-				var p = new Dictionary<string,string> ();
-				speaker.Speak (toSpeak, QueueMode.Flush, p);
 			}
+			var p = new Dictionary<string,string> ();
+			speaker.Speak (toSpeak, QueueMode.Flush, p);
+
 		}
 
 		#region IOnInitListener implementation
+
 		public void OnInit (OperationResult status)
 		{
-			if (status.Equals (OperationResult.Success)) {
+			if (status == OperationResult.Error) {
+				System.Diagnostics.Debug.WriteLine ("IOnInit OperationResult.Error");
+			} else if (status.Equals (OperationResult.Success)) {
 				System.Diagnostics.Debug.WriteLine ("spoke");
 				var p = new Dictionary<string,string> ();
 				speaker.Speak (toSpeak, QueueMode.Flush, p);
-			}
-			else
+			} else
 				System.Diagnostics.Debug.WriteLine ("was quiet");
 		}
+
 		#endregion
 	}
 }
