@@ -45,7 +45,7 @@ namespace JobSearchScorecard
 		
 			var btnAdd = new Button () { Text = "Add a new task completion", };
 			btnAdd.Clicked += HandleAdd;
-			var btnSpeakTask = new Button { Text = "Speak Task", BorderWidth = 2, };
+			var btnSpeakTask = new Button { Text = "Listen", BorderWidth = 2, };
 			btnSpeakTask.Clicked += (sender, e) => {
 				DependencyService.Get<ITextToSpeech> ().Speak (fullDescription);
 			};

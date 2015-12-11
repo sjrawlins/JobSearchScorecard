@@ -43,7 +43,7 @@ namespace JobSearchScorecard
 					this.Navigation.PopAsync ();
 				};
 			}
-			var speakNotes = new Button { Text = "Speak Notes", BorderWidth = 2, };
+			var speakNotes = new Button { Text = "Listen", BorderWidth = 2, };
 			speakNotes.Clicked += (sender, e) => {
 				DependencyService.Get<ITextToSpeech> ().Speak (notesEntry.Text);
 			};
