@@ -1,5 +1,5 @@
 # JobSearchScorecard
-A smart-phone app that guides you in the job-hunt, helping you stay organized and motivated when in the job hunt.  You earn points, and hear words of encouragement, as you proceed down a tested, proven path to landing that next job.
+A smart-phone app that guides you in the job-hunt, helping you stay organized, inspired and motivated.  You log your search tasks, earn points and can even hear words of encouragement, as you proceed down a tested, proven path to landing that next job.
 
 My goal is to learn `Xamarin Forms` and to publish a **cross-platform** application (i.e. commmon code running on iOS, Android and Windows Phone).
 
