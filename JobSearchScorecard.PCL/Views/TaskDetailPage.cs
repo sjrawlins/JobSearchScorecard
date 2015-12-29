@@ -11,13 +11,13 @@ namespace JobSearchScorecard
 	public class TaskDetailPage : ContentPage
 	{
 
-		public TaskDetailPage (string fullDescription, bool addNew)
+		public TaskDetailPage (string fullDescription)
 		{
 			Title = fullDescription;
 
 			NavigationPage.SetHasNavigationBar (this, true);
 
-			var notesLabel = new Label { Text = "Notes about this task (optional):" };
+			var notesLabel = new Label { Text = "Add notes about this task (optional):" };
 			var notesEntry = new Editor ();
 
 			// cannot get just the right "look" that will be satisfactory for both Android and iOS
@@ -25,27 +25,19 @@ namespace JobSearchScorecard
 
 			notesEntry.SetBinding (Editor.TextProperty, "Notes");
 
-			var saveButton = new Button { Text = "Save", BorderWidth = 2, };
+			var saveButton = new Button { Text = "Save Notes", BorderWidth = 2, };
 			saveButton.Clicked += (sender, e) => {
 				var taskItem = (Task)BindingContext;
 				App.Database.SaveTask (taskItem);
 				this.Navigation.PopAsync ();
 			};
 
-			// Do not activate DELETE button if you are adding a new task
-			var deleteButton = new Button { Text = "Delete", BorderWidth = 2, };
-			if (addNew) {
-				deleteButton.IsEnabled = false;
-			} else {
-				deleteButton.Clicked += (sender, e) => {
-					var taskItem = (Task)BindingContext;
-					App.Database.DeleteTask (taskItem.ID);
-					this.Navigation.PopAsync ();
-				};
-			}
-			var speakNotes = new Button { Text = "Listen", BorderWidth = 2, };
-			speakNotes.Clicked += (sender, e) => {
-				DependencyService.Get<ITextToSpeech> ().Speak (notesEntry.Text);
+			var deleteButton = new Button { Text = "Delete this Task", BorderWidth = 2, };
+
+			deleteButton.Clicked += (sender, e) => {
+				var taskItem = (Task)BindingContext;
+				App.Database.DeleteTask (taskItem.ID);
+				this.Navigation.PopAsync ();
 			};
 
 			var cancelButton = new Button { Text = "Cancel", BorderWidth = 2, };
@@ -65,7 +57,7 @@ namespace JobSearchScorecard
 					lineSeparator,
 					saveButton, 
 					deleteButton,
-					speakNotes,
+					//	speakNotes,
 					cancelButton,
 				}
 			};

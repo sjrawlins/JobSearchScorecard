@@ -14,6 +14,7 @@ namespace JobSearchScorecard
 		ListView listTaskHistory;
 		Activity theAct;
 		string fullDescription;
+		Label tapToDeleteOrUpdate;
 
 		public ActivityPage (Activity act)
 		{
@@ -43,30 +44,30 @@ namespace JobSearchScorecard
 			listTaskHistory.ItemTemplate = listTemplate;
 			listTaskHistory.ItemSelected += HandleSelect;
 		
-			var btnAdd = new Button () { Text = "Add a new task completion", };
+			var btnAdd = new Button () { Text = "Add Task", BorderWidth = 2, };
 			btnAdd.Clicked += HandleAdd;
-			var btnSpeakTask = new Button { Text = "Listen", BorderWidth = 2, };
-			btnSpeakTask.Clicked += (sender, e) => {
-				DependencyService.Get<ITextToSpeech> ().Speak (fullDescription);
-			};
+
 			var layout = new StackLayout ();
 			layout.Children.Add (subTitle);
 			layout.Children.Add (btnAdd);
-			layout.Children.Add (btnSpeakTask);
+			tapToDeleteOrUpdate = new Label { Text = "Tap below to Delete or Add Notes", TextColor = Color.Teal, };
+			tapToDeleteOrUpdate.IsVisible = false;
+			layout.Children.Add (tapToDeleteOrUpdate);
+
 			layout.Children.Add (listCurrentTasks);
 			var lineSeparator = new BoxView () { Color = Color.Blue, WidthRequest = 100, HeightRequest = 8 };
 			layout.Children.Add (lineSeparator);
 			layout.Children.Add (new Label { Text = "History (not included in current score):", TextColor = Color.Teal, });
 			layout.Children.Add (listTaskHistory);
-			layout.HorizontalOptions = LayoutOptions.Center;
+			//layout.HorizontalOptions = LayoutOptions.Center;
 			Content = layout;
 
 		}
-			
+
 		void HandleSelect (object sender, SelectedItemChangedEventArgs e)
 		{
 			var theTask = (Task)e.SelectedItem;
-			var taskDetailPage = new TaskDetailPage (fullDescription, false);
+			var taskDetailPage = new TaskDetailPage (fullDescription);
 			taskDetailPage.BindingContext = theTask;
 			Navigation.PushAsync (taskDetailPage);
 		}
@@ -74,9 +75,8 @@ namespace JobSearchScorecard
 		void HandleAdd (object sender, EventArgs ea)
 		{
 			var newTask = new Task ((int)theAct.Step, theAct.SubStep, theAct.Score, (theAct.OneTimeOnly ? 1 : 0), DateTime.Now, null);
-			var taskDetailPage = new TaskDetailPage (fullDescription, true);
-			taskDetailPage.BindingContext = newTask;
-			Navigation.PushAsync (taskDetailPage);
+			App.Database.SaveTask (newTask);
+			this.OnAppearing ();
 		}
 
 		protected override void OnAppearing ()
@@ -84,32 +84,14 @@ namespace JobSearchScorecard
 			IEnumerable<Task> currentTasks;
 			IEnumerable<Task> pastPeriodTasks;
 			base.OnAppearing ();
-			// reset the 'resume' id, since we just want to re-start here
-			//((App)App.Current).ResumeAtTodoId = -1;
+
 			var startDateTime = App.Database.GetActivePeriod ().StartDT;
 
 			currentTasks = App.Database.GetCurrentTasksBySubStep (theAct.SubStep);
+			// Reveal (or hide) the "Tap below" label depending on whether or not there are current-period tasks 
+	        tapToDeleteOrUpdate.IsVisible = currentTasks.Any ();
+
 			pastPeriodTasks = App.Database.GetTasksBySubStep (theAct.SubStep).Where (t => t.DT < startDateTime);
-			var anyAtAll = currentTasks.Any () || pastPeriodTasks.Any ();
-
-			ToolbarItems.Clear ();  // for Android only (somehow the "Add" buttons would accumulate without this statement)
-
-			// Determining whether or not to place an "Add" action button in the urh corner.
-			// First: don't add it if it's already there!  Next up:
-			// if 1-time-only task, then you can only create it once (regardless of time period), so don't show Add button if already completed
-//			if (!ToolbarItems.Any () && !theAct.OneTimeOnly || !anyAtAll) {
-//				ToolbarItem tbi = null;
-//				tbi = new ToolbarItem ("Add", null, HandleAdd
-//
-////					() => {
-////					var newTask = new Task ((int)theAct.Step, theAct.SubStep, theAct.Score, (theAct.OneTimeOnly ? 1 : 0), DateTime.Now, null);
-////					var taskDetailPage = new TaskDetailPage (fullDescription, true);
-////					taskDetailPage.BindingContext = newTask;
-////					Navigation.PushAsync (taskDetailPage);
-////				}
-//				);
-//				ToolbarItems.Add (tbi);
-//			}
 
 			listCurrentTasks.ItemsSource = currentTasks;
 			listTaskHistory.ItemsSource = pastPeriodTasks;

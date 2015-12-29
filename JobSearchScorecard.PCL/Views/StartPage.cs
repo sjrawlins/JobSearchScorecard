@@ -12,24 +12,61 @@ namespace JobSearchScorecard
 		private static bool firstTime = true;
 		public List<Task> currentTasks;
 
+		static Random myRandom = new Random();
 		Label scoreBox;
 		Label scorePeriod;
+		Label welcomeLabel;
+
+		private SettingsPage _settingsPage = null;
+
+		string encourage = "OK";
+		string[] encouragements = { "Be good to yourself", "You can do it", "Keep climbing", "You are awesome", "Nice work",
+			"Each step brings you closer to your new job", "You deserve a sanity break, so take a breakther",
+			"Your job is buried out there somewhere, keep digging",
+			"You're an Ace Job Seeker", "Impressive", "Steady as she goes", "Tell your friends and family", "Fantastic",
+		};
 
 		public StartPage ()
 		{
 			Title = "Job Search Scorecard";
-			if (firstTime) {
+
+			NavigationPage.SetHasBackButton (this, false);  // no back button from this screen!
+
+			App.AppSettings = App.Database.GetSettings ();
+			if (App.AppSettings == null) {
+				App.AppSettings = new Settings ();
+				App.Database.SaveSettings (App.AppSettings);
+				_settingsPage = new SettingsPage (true);  // tell Settings that it's Name-entry only
+				_settingsPage.BindingContext = App.AppSettings;  // first time Settings (no Cancel)
+				this.Navigation.PushModalAsync (_settingsPage);
+			} else {
+				_settingsPage = new SettingsPage (false);
+			}
+			;
+
+			welcomeLabel = new Label () {
+				FontSize = 22,
+				FontAttributes = FontAttributes.Italic,
+				HorizontalOptions = LayoutOptions.CenterAndExpand,
+			};
+			welcomeLabel.Text = String.Format ("Welcome to Job Seeker Scorecard, friend!");
+
+
+			MessagingCenter.Subscribe<SettingsPage> (this, "popped", (sender) => { 
+				OnAppearing();
+			});
+				
+			if (firstTime) {  // first time in this screen for this execution, but not necessarily first time in app
 				firstTime = false;
 				ActivityTable.BuildActivitiesDictionary ();  // build the table of potential tasks (aka Activity list) 
 				//currentTasks = MockUpTasks ();  // if you wish to mock-up some completed tasks
 				Debug.WriteLine ("Built Activities Dictionary with : " + Activity.UniqueCode + " unique entries");
-			}
-			Debug.WriteLine ("Database Table Counts at Start-Up:");
-			Debug.WriteLine ("[Task].Count = " + App.Database.GetTasks ().Count () );
-			Debug.WriteLine ("[Period]Database now has " + App.Database.GetPeriods ().Count () + " rows in <Period>");
-			string settingsState = App.Database.GetSettings () == null ? " empty" : " one row";
-			Debug.WriteLine ("[Settings] is " + settingsState);
+				Debug.WriteLine ("Database Table Counts at Start-Up:");
+				Debug.WriteLine ("[Task] has " + App.Database.GetTasks ().Count () + " rows");
+				Debug.WriteLine ("[Period] has " + App.Database.GetPeriods ().Count () + " rows");
 
+			}  // first-time
+				
 			scoreBox = new Label () {
 				Text = "No Score",
 				FontSize = 55,
@@ -61,11 +98,13 @@ namespace JobSearchScorecard
 			};
 
 			var btnSpeak = new Button { 
-				Text = "Speak Score",
+				Text = "Hear some Encouraging Words",
 				Style = buttonStyle,
 			};
 			btnSpeak.Clicked += (sender, e) => {
-				DependencyService.Get<ITextToSpeech> ().Speak (scoreBox.Text);
+				encourage = encouragements [myRandom.Next (0, encouragements.Length)];
+				DependencyService.Get<ITextToSpeech> ().Speak (
+					string.Format("{0}, {1}. You have {2}", encourage, App.AppSettings.Name, scoreBox.Text));
 			};
 
 			// Two buttons: one for starting a new period, the other for wiping-out the database
@@ -109,32 +148,19 @@ namespace JobSearchScorecard
 			};
 
 			var btnSettings = new Button {
-				Text = "Update your Email and other settings",
+				Text = "Update Settings",
 				Style = buttonStyle,
 			};
-			btnSettings.Clicked += async (sender, e) => {
-				await this.Navigation.PushAsync (new SettingsPage ());
+			btnSettings.Clicked += async (sender, e) => {					
+				_settingsPage.BindingContext = App.AppSettings;
+				await this.Navigation.PushModalAsync (_settingsPage);
 			};
 
-			var lblResets = new Label () {
-				Text = "WARNING: The following button removes all data - the equivalent of a fresh install of the app",
-			}; 
-			var btnClearDB = new Button { 
-				Text = "Clear Entire Database",
-				Style = buttonStyle,
-			};
-			btnClearDB.Clicked += async (sender, e) => {
-				var action = await DisplayActionSheet ("Are you sure you want to delete all data?", 
-					             "No", "Yes, wipe clean!");
-				if (action.StartsWith ("N"))
-					return;
-				App.Database.DeleteAll ();
-				this.OnAppearing ();
-			};
 				
 			this.Content = new StackLayout {
 				Padding = new Thickness (8, 8),
 				Children = {
+					welcomeLabel,
 					scoreBox,
 					scorePeriod,
 					btnShowSteps,
@@ -144,35 +170,47 @@ namespace JobSearchScorecard
 //					btnFb,
 					btnLaunchJTSG,
 					btnSettings,
-					new BoxView { Color = Color.Transparent, HeightRequest = 5 },
-					lblResets,
-					btnClearDB,
 				}
 			};
 		}
 
-
 		protected override void OnAppearing ()
 		{
 			int totalScore = 0;
+			string welcomeBanner = string.Empty;
 
 			base.OnAppearing ();
 
 			totalScore = CalculateScore (App.Database.GetAllTasksWithinPeriod ());
+
 			App.Database.UpdateCurrentScore (totalScore);
 			scoreBox.Text = totalScore.ToString () + " points";
 
-			Color scoreColor = Color.Green;
-			if (totalScore < 100) {
-				scoreColor = Color.Red;
+			// Score remains Red until you have passed the threshold
+			Color scoreColor = Color.Red;
+			if (totalScore == 0) {
+				welcomeBanner = "Tap below to EARN POINTS";
+			} else if (totalScore < App.AppSettings.GreenThreshold) {
+				welcomeBanner = String.Format ("Try to get above {0} points", App.AppSettings.GreenThreshold);
+			} else {
+				welcomeBanner = "Nice work! Keep going";
+				scoreColor = Color.Green;
 			}
-			;
+
+			welcomeLabel.Text = String.Format ("{0}, {1}!", welcomeBanner, App.AppSettings.Name);
 
 			scoreBox.TextColor = scoreColor;
 
 			var startDateTime = App.Database.GetActivePeriod ().StartDT;
 			scorePeriod.Text = "for the period beginning " + startDateTime.ToString ("dddd',' MMM d 'at' HH:mm tt");
 
+		}
+
+		protected override bool OnBackButtonPressed ()
+		{
+			//return base.OnBackButtonPressed ();
+			// disable Back Button from this, the main screen
+			return true;
 		}
 
 

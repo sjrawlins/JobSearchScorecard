@@ -147,6 +147,7 @@ namespace JobSearchScorecard
 			}
 		}
 
+		// Delete All "Data", but leave Settings and make sure there is one, current Period
 		public void DeleteAll()
 		{
 			lock (locker) {

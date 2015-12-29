@@ -8,30 +8,21 @@ namespace JobSearchScorecard
 {
 	public class App : Application
 	{
-		static ScorecardDatabase database = null;
 		public static INavigation Navigation { get; private set; }
+		public static ScorecardDatabase Database;
+		public static Settings AppSettings;
 
 		public App ()
-		{
-			MainPage = new NavigationPage(new StartPage ());
-		}
+		{    
+			Database = new ScorecardDatabase ();
+			AppSettings = null;
 
-		public static ScorecardDatabase Database {
-			get { 
-				if (database == null) {
-					database = new ScorecardDatabase ();
-				}
-				return database; 
-			}
+			var startPage = new StartPage();
+			var rootPage = new NavigationPage(startPage);
+			App.Navigation = rootPage.Navigation;
+			MainPage = rootPage;
+			//MainPage = new NavigationPage (new StartPage ());
 		}
-
-//		public static Page GetMainPage ()
-//		{
-//			//return new StartPage ();
-//			var rootPage = new NavigationPage (new StartPage ());
-//			Navigation = rootPage.Navigation;
-//			return rootPage;
-//		}
 
 		protected override void OnStart ()
 		{
