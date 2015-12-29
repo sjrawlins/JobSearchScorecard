@@ -20,10 +20,18 @@ namespace JobSearchScorecard
 		private SettingsPage _settingsPage = null;
 
 		string encourage = "OK";
-		string[] encouragements = { "Be good to yourself", "You can do it", "Keep climbing", "You are awesome", "Nice work",
-			"Each step brings you closer to your new job", "You deserve a sanity break, so take a breakther",
+		string[] encouragements = { 
+			"Be good to yourself - get plenty of rest and exercise", 
+			"You can do it!  Keep going", 
+			"Keep to a regular schedule", "You are awesome", "Nice work",
+			"Each step brings you closer to your new job",
+			"You deserve a sanity break, so take a breather",
 			"Your job is buried out there somewhere, keep digging",
-			"You're an Ace Job Seeker", "Impressive", "Steady as she goes", "Tell your friends and family", "Fantastic",
+			"Be confident, and remember that it's not all about you",
+			"You're an Ace Job Seeker, but take it easy.  No more than 3 job applications in one day.",
+			"Impressive job seeking.  Remember to give yourself time to breathe.",
+			"Steady as she goes.  Slow and steady wins the race", 
+			"You are fantastic! Tell your friends and family",
 		};
 
 		public StartPage ()
@@ -104,7 +112,7 @@ namespace JobSearchScorecard
 			btnSpeak.Clicked += (sender, e) => {
 				encourage = encouragements [myRandom.Next (0, encouragements.Length)];
 				DependencyService.Get<ITextToSpeech> ().Speak (
-					string.Format("{0}, {1}. You have {2}", encourage, App.AppSettings.Name, scoreBox.Text));
+					string.Format("{0}, {1}. You have {2}",  App.AppSettings.Name, encourage, scoreBox.Text));
 			};
 
 			// Two buttons: one for starting a new period, the other for wiping-out the database

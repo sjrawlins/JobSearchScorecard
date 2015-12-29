@@ -17,7 +17,7 @@ namespace JobSearchScorecard
 
 			NavigationPage.SetHasNavigationBar (this, true);
 
-			var notesLabel = new Label { Text = "Add notes about this task (optional):" };
+			var notesLabel = new Label { Text = "You can add notes about this Task Completion here:" };
 			var notesEntry = new Editor ();
 
 			// cannot get just the right "look" that will be satisfactory for both Android and iOS
@@ -32,7 +32,7 @@ namespace JobSearchScorecard
 				this.Navigation.PopAsync ();
 			};
 
-			var deleteButton = new Button { Text = "Delete this Task", BorderWidth = 2, };
+			var deleteButton = new Button { Text = "Delete this entry and deduct points", BorderWidth = 2, };
 
 			deleteButton.Clicked += (sender, e) => {
 				var taskItem = (Task)BindingContext;

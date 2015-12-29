@@ -159,9 +159,9 @@ namespace JobSearchScorecard
 
 			// Step 7 - Celebrate
 			Activities.Add(Steps.Celebrate, new List<Activity> (2) {
-				new Activity (Steps.Celebrate, "Bring treats to your Job Support Group", 50),
-				new Activity (Steps.Celebrate, "Send thank-you notes", 50),
-				new Activity (Steps.Celebrate, "Build and Maintain your network", 50),
+				new Activity (Steps.Celebrate, "Bring treats to your Job Support Group", 200, true),
+				new Activity (Steps.Celebrate, "Thank those special people who helped you on your way", 250, true),
+				new Activity (Steps.Celebrate, "Build and Maintain your network, laying groundwork for future Job Transitions", 300, true),
 			}
 			);
 

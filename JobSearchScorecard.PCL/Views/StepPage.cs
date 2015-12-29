@@ -23,7 +23,7 @@ namespace JobSearchScorecard
 
 		public StepPage (Steps step)
 		{
-			Title = string.Format("{0}: Pick a Task", StepNames.LookUpStepNameGivenCode (step));
+			Title = string.Format("{0}: Pick an Activity", StepNames.LookUpStepNameGivenCode (step));
 			Debug.WriteLine ("Screen for step: " + step);
 			theStep = step;
 
@@ -80,7 +80,6 @@ namespace JobSearchScorecard
 						detailLine = string.Format ("({0} points earned)", subScore);
 					}
 				}
-			
 				ts.Add (new TextCell {
 					Text = string.Format("{0} (worth {1} points)", act.FullName, act.Score),
 					Detail = detailLine,
