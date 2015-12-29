@@ -15,6 +15,7 @@ namespace JobSearchScorecard
 		Activity theAct;
 		string fullDescription;
 		Label tapToDeleteOrUpdate;
+		Button btnAdd;
 
 		public ActivityPage (Activity act)
 		{
@@ -25,7 +26,11 @@ namespace JobSearchScorecard
 				FontAttributes = FontAttributes.Italic,
 				HorizontalOptions = LayoutOptions.CenterAndExpand,
 			};
-			subTitle.Text = string.Format ("Worth {0} points {1}", act.Score, act.OneTimeOnly ? "(one-time only)" : string.Empty);
+			if (act.OneTimeOnly) {
+				subTitle.Text = string.Format ("Worth {0} points (one time only)", act.Score);
+			} else {
+				subTitle.Text = string.Format ("Worth {0} points (each)", act.Score);
+			}
 
 			var listTemplate = new DataTemplate (() => {
 				var cell = new TextCell ();
@@ -44,7 +49,7 @@ namespace JobSearchScorecard
 			listTaskHistory.ItemTemplate = listTemplate;
 			listTaskHistory.ItemSelected += HandleSelect;
 		
-			var btnAdd = new Button () { Text = "Add Task", BorderWidth = 2, };
+			btnAdd = new Button () { Text = "Tap to Record Completion", BorderWidth = 2, };
 			btnAdd.Clicked += HandleAdd;
 
 			var layout = new StackLayout ();
@@ -89,9 +94,14 @@ namespace JobSearchScorecard
 
 			currentTasks = App.Database.GetCurrentTasksBySubStep (theAct.SubStep);
 			// Reveal (or hide) the "Tap below" label depending on whether or not there are current-period tasks 
+
 	        tapToDeleteOrUpdate.IsVisible = currentTasks.Any ();
 
 			pastPeriodTasks = App.Database.GetTasksBySubStep (theAct.SubStep).Where (t => t.DT < startDateTime);
+
+			// Tricky.  Show the "Add" button only if it is "allowed".  A 1-time-only task completion can
+			// only be recorded once, in current (or history)
+			btnAdd.IsEnabled = (!currentTasks.Any() && !pastPeriodTasks.Any()) || !theAct.OneTimeOnly;
 
 			listCurrentTasks.ItemsSource = currentTasks;
 			listTaskHistory.ItemsSource = pastPeriodTasks;
