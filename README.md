@@ -1,8 +1,6 @@
 # JobSearchScorecard
-A smart-phone app that guides you in the job-hunt, helping you stay organized, inspired and motivated.  You log your search tasks, earn points and can even hear words of encouragement, as you proceed down a tested, proven path to landing that next job.
+A smart-phone app that guides you through the job-hunt, helping you stay organized, inspired and motivated.  As you work your way through the recommended steps, you can log your activities, keep notes, earn points and even hear words of encouragement.
 
-My goal is to learn `Xamarin Forms` and to publish a **cross-platform** application (i.e. commmon code running on iOS, Android and Windows Phone).
-
-The search steps are based upon the Wooddale Church's Job Transition Support Group.
+The search steps are based upon the Job Transition Support Group at Wooddale Church in Eden Prairie, Minnesota (jobtransition.net)
 
 This app was created by Stephen J. Rawlins (call me Steve).  I am a C# developer living in Minneapolis, Minnesota.
