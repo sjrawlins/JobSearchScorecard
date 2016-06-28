@@ -11,17 +11,18 @@ namespace JobSearchScorecard
 	public class SettingsPage : ContentPage
 	{
 		Entry nameEntry = null;
+		Label title = new Label () { FontSize = 25, HorizontalTextAlignment = TextAlignment.Center, } ;
 
 		public SettingsPage (bool firstTimePrompt)
 		{
 			if (firstTimePrompt) {
-				Title = "Welcome.  Please enter your name and tap 'Save'";
+				title.Text = "Welcome.  Please enter your name and tap 'Save'";
 			} else {
-				Title = "Update Settings";
+				title.Text = "Update Settings";
 			}
 				
 			// see if the following puts the "back arrow" on Droid:
-			//NavigationPage.SetHasNavigationBar (this, true);
+			// NavigationPage.SetHasNavigationBar (this, true);
 			Padding = new Thickness (5, Device.OnPlatform (20, 0, 0), 5, 0);
 
 			var entryStyle = new Style (typeof(Entry)) {
@@ -33,15 +34,14 @@ namespace JobSearchScorecard
 
 			var nameLabel = new Label () {
 				Text = "Name:", 
-				//WidthRequest = 200
 			};
-			nameEntry = new Entry { Style = entryStyle,  WidthRequest = 200, };
+			nameEntry = new Entry { Style = entryStyle, };
 			nameEntry.SetBinding (Entry.TextProperty, "Name");
 			if (String.IsNullOrWhiteSpace (nameEntry.Text))
-				nameEntry.Placeholder = "Your name here";
+				nameEntry.Placeholder = "Please enter your name";
 
 			var nameStack = new StackLayout () {
-				Orientation = StackOrientation.Horizontal,
+				Orientation = StackOrientation.Vertical,
 				Children = { nameLabel, nameEntry }
 			};
 					
@@ -55,17 +55,6 @@ namespace JobSearchScorecard
 				Orientation = StackOrientation.Horizontal,
 				Children = { greenThresholdLabel, greenThresholdEntry }
 			};
-
-//			var starIncrementLabel = new Label () {
-//				Text = "Star increment:", 
-//				//WidthRequest = 200
-//			};
-//			var starIncrementEntry = new Entry { Keyboard = Keyboard.Numeric, Style = entryStyle, };
-//			starIncrementEntry.SetBinding (Entry.TextProperty, "StarIncrement");
-//			var starIncrementStack = new StackLayout () {
-//				Orientation = StackOrientation.Horizontal,
-//				Children = { starIncrementLabel, starIncrementEntry }
-//			};
 			
 			var saveButton = new Button { Text = "Save", BorderWidth = 2, };
 			saveButton.Clicked += (sender, e) => {
@@ -105,6 +94,7 @@ namespace JobSearchScorecard
 				nameEntry.Focus ();
 				Content = new StackLayout {
 					Children = {
+						title,
 						nameStack,
 						saveButton,
 					}
@@ -113,6 +103,7 @@ namespace JobSearchScorecard
 				Content = new StackLayout {
 					//Padding = new Thickness (5),
 					Children = {
+						title,
 						nameStack,
 						greenStack,
 						//starIncrementStack,
@@ -124,7 +115,7 @@ namespace JobSearchScorecard
 			}
 		}
 
-		protected override void OnAppearing ()
+		async protected override void OnAppearing ()
 		{
 			base.OnAppearing ();
 
@@ -134,7 +125,8 @@ namespace JobSearchScorecard
 
 				Debug.WriteLine ("SettingsPage.OnAppearing: force name prompt");
 				nameEntry.Focus ();
-				DisplayAlert ("Welcome, Job Seeker!", "Let's get started.  Please enter your Name and tap Save", "OK, Got it");
+				await DisplayAlert ("Welcome, Job Seeker!", "Ready to get started?",
+					"Yes");
 			}
 		}
 

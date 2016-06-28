@@ -164,8 +164,8 @@ namespace JobSearchScorecard
 				await this.Navigation.PushModalAsync (_settingsPage);
 			};
 
-				
-			this.Content = new StackLayout {
+			ScrollView scrollView = new ScrollView ();
+			var stackLayout = new StackLayout {
 				Padding = new Thickness (8, 8),
 				Children = {
 					welcomeLabel,
@@ -180,6 +180,8 @@ namespace JobSearchScorecard
 					btnSettings,
 				}
 			};
+			scrollView.Content = stackLayout;
+			this.Content = scrollView;
 		}
 
 		protected override void OnAppearing ()
@@ -197,7 +199,7 @@ namespace JobSearchScorecard
 			// Score remains Red until you have passed the threshold
 			Color scoreColor = Color.Red;
 			if (totalScore == 0) {
-				welcomeBanner = "Tap below to EARN POINTS";
+				welcomeBanner = "Start earning points";
 			} else if (totalScore < App.AppSettings.GreenThreshold) {
 				welcomeBanner = String.Format ("Try to get above {0} points", App.AppSettings.GreenThreshold);
 			} else {
